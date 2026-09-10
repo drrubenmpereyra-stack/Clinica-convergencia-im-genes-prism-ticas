@@ -35,153 +35,141 @@ document.addEventListener('DOMContentLoaded', () => {
     const linea3 = document.getElementById('linea-3');
     const outputDisplay = document.getElementById('output');
 
+    // Estructura completa del menú jerárquico
     const menuData = {
         admin: {
             nombre: "1. Administración",
-            claseBtn: "btn-b1-p",
+            claseSelect: "select-b1",
             hijos: [
-                { nombre: "1.1 Pacientes", link: "pacientes.html", clase: "btn-b1-s" },
-                { nombre: "1.2 Contabilidad", clase: "btn-b1-s", desc: "Módulo de gestión contable, honorarios y balance institucional." },
-                { nombre: "1.3 Central formularios", clase: "btn-b1-s", desc: "Repositorio unificado de fichas clínicas y escalas estandarizadas." }
+                { nombre: "1.1 Pacientes", link: "pacientes.html" },
+                { nombre: "1.2 Contabilidad", desc: "Módulo de gestión contable, honorarios y balance institucional." },
+                { nombre: "1.3 Central formularios", desc: "Repositorio unificado de fichas clínicas y escalas estandarizadas." }
             ]
         },
         estrategias: {
             nombre: "2. Estrategias y Técnicas",
-            claseBtn: "btn-b2-p",
+            claseSelect: "select-b2",
             hijos: [
                 {
                     nombre: "2.1 Cartografía de la Intersubjetividad",
-                    clase: "btn-b2-s",
                     nietos: [
-                        { nombre: "2.1.1 Aquí y ahora - HPA", link: "aqui_y_ahora.html", clase: "btn-b2-t" },
-                        { nombre: "2.1.2 Validación empática como freno de emergencia", clase: "btn-b2-t", desc: "Técnica de regulación afectiva y freno de emergencia en desbordes." },
-                        { nombre: "2.1.3 Monitoreo y uso contratransferencia somática", clase: "btn-b2-t", desc: "Lectura de marcadores somáticos del analista como brújula clínica." },
-                        { nombre: "2.1.4 Encuadre, sincronización vocal, focusing e interpretación", clase: "btn-b2-t", desc: "Convergencia entre sincronía prosódica, focusing corporal e intervención." }
+                        { nombre: "2.1.1 Aquí y ahora - HPA", link: "aqui_y_ahora.html" },
+                        { nombre: "2.1.2 Validación empática como freno de emergencia", desc: "Técnica de regulación afectiva y freno de emergencia en desbordes." },
+                        { nombre: "2.1.3 Monitoreo y uso contratransferencia somática", desc: "Lectura de marcadores somáticos del analista como brújula clínica." },
+                        { nombre: "2.1.4 Encuadre, sincronización vocal, focusing e interpretación", desc: "Convergencia entre sincronía prosódica, focusing corporal e intervención." }
                     ]
                 },
                 {
                     nombre: "2.2 Memoria Traumática y el a posteriori",
-                    clase: "btn-b2-s",
                     nietos: [
-                        { nombre: "2.2.1", clase: "btn-b2-t", desc: "Componente A de Memoria Traumática." },
-                        { nombre: "2.2.2", clase: "btn-b2-t", desc: "Componente B de Memoria Traumática." }
+                        { nombre: "2.2.1", desc: "Componente A de Memoria Traumática." },
+                        { nombre: "2.2.2", desc: "Componente B de Memoria Traumática." }
                     ]
                 },
                 {
                     nombre: "2.3 Circuitos de recompensa",
-                    clase: "btn-b2-s",
                     nietos: [
-                        { nombre: "2.3.1", clase: "btn-b2-t", desc: "Circuitos de recompensa - Subcomponente 1." },
-                        { nombre: "2.3.2", clase: "btn-b2-t", desc: "Circuitos de recompensa - Subcomponente 2." }
+                        { nombre: "2.3.1", desc: "Circuitos de recompensa - Subcomponente 1." },
+                        { nombre: "2.3.2", desc: "Circuitos de recompensa - Subcomponente 2." }
                     ]
                 },
                 {
                     nombre: "2.4 La interfaz cuerpo mente",
-                    clase: "btn-b2-s",
                     nietos: [
-                        { nombre: "2.4.1", clase: "btn-b2-t", desc: "Interfaz cuerpo mente - Subcomponente 1." },
-                        { nombre: "2.4.2", clase: "btn-b2-t", desc: "Interfaz cuerpo mente - Subcomponente 2." }
+                        { nombre: "2.4.1", desc: "Interfaz cuerpo mente - Subcomponente 1." },
+                        { nombre: "2.4.2", desc: "Interfaz cuerpo mente - Subcomponente 2." }
                     ]
                 },
                 {
                     nombre: "2.5 Neurobiología de la repetición",
-                    clase: "btn-b2-s",
                     nietos: [
-                        { nombre: "2.5.1", clase: "btn-b2-t", desc: "Neurobiología de la repetición - Subcomponente 1." },
-                        { nombre: "2.5.2", clase: "btn-b2-t", desc: "Neurobiología de la repetición - Subcomponente 2." }
+                        { nombre: "2.5.1", desc: "Neurobiología de la repetición - Subcomponente 1." },
+                        { nombre: "2.5.2", desc: "Neurobiología de la repetición - Subcomponente 2." }
                     ]
                 },
                 {
                     nombre: "2.6 Plasticidad simbólica y sináptica",
-                    clase: "btn-b2-s",
                     nietos: [
-                        { nombre: "2.6.1", clase: "btn-b2-t", desc: "Plasticidad simbólica y sináptica - Subcomponente 1." },
-                        { nombre: "2.6.2", clase: "btn-b2-t", desc: "Plasticidad simbólica y sináptica - Subcomponente 2." }
+                        { nombre: "2.6.1", desc: "Plasticidad simbólica y sináptica - Subcomponente 1." },
+                        { nombre: "2.6.2", desc: "Plasticidad simbólica y sináptica - Subcomponente 2." }
                     ]
                 },
                 {
                     nombre: "2.7 Arquitectura del sueño y función alucinatoria",
-                    clase: "btn-b2-s",
                     nietos: [
-                        { nombre: "2.7.1", clase: "btn-b2-t", desc: "Arquitectura del sueño - Subcomponente 1." },
-                        { nombre: "2.7.2", clase: "btn-b2-t", desc: "Arquitectura del sueño - Subcomponente 2." }
+                        { nombre: "2.7.1", desc: "Arquitectura del sueño - Subcomponente 1." },
+                        { nombre: "2.7.2", desc: "Arquitectura del sueño - Subcomponente 2." }
                     ]
                 },
                 {
                     nombre: "2.8 El Ello somático y T. Psicosomáticos",
-                    clase: "btn-b2-s",
                     nietos: [
-                        { nombre: "2.8.1", clase: "btn-b2-t", desc: "Ello somático - Subcomponente 1." },
-                        { nombre: "2.8.2", clase: "btn-b2-t", desc: "Ello somático - Subcomponente 2." }
+                        { nombre: "2.8.1", desc: "Ello somático - Subcomponente 1." },
+                        { nombre: "2.8.2", desc: "Ello somático - Subcomponente 2." }
                     ]
                 },
                 {
                     nombre: "2.9 Focalización en estructuras límbicas",
-                    clase: "btn-b2-s",
                     nietos: [
-                        { nombre: "2.9.1", clase: "btn-b2-t", desc: "Estructuras límbicas - Subcomponente 1." },
-                        { nombre: "2.9.2", clase: "btn-b2-t", desc: "Estructuras límbicas - Subcomponente 2." }
+                        { nombre: "2.9.1", desc: "Estructuras límbicas - Subcomponente 1." },
+                        { nombre: "2.9.2", desc: "Estructuras límbicas - Subcomponente 2." }
                     ]
                 },
                 {
                     nombre: "2.10 Ética de la singularidad en la era tecnológica",
-                    clase: "btn-b2-s",
                     nietos: [
-                        { nombre: "2.10.1", clase: "btn-b2-t", desc: "Ética de la singularidad - Subcomponente 1." },
-                        { nombre: "2.10.2", clase: "btn-b2-t", desc: "Ética de la singularidad - Subcomponente 2." }
+                        { nombre: "2.10.1", desc: "Ética de la singularidad - Subcomponente 1." },
+                        { nombre: "2.10.2", desc: "Ética de la singularidad - Subcomponente 2." }
                     ]
                 }
             ]
         },
         especiales: {
             nombre: "3. Estrategias especiales I",
-            claseBtn: "btn-b3-p",
+            claseSelect: "select-b3",
             hijos: [
                 { 
                     nombre: "3.1 Situaciones de duelo", 
-                    clase: "btn-b3-s",
                     nietos: [
-                        { nombre: "3.1.1", clase: "btn-b3-t", desc: "Duelo - Subcomponente 1." },
-                        { nombre: "3.1.2", clase: "btn-b3-t", desc: "Duelo - Subcomponente 2." }
+                        { nombre: "3.1.1", desc: "Duelo - Subcomponente 1." },
+                        { nombre: "3.1.2", desc: "Duelo - Subcomponente 2." }
                     ]
                 },
                 { 
                     nombre: "3.2 Situaciones de crisis", 
-                    clase: "btn-b3-s",
                     nietos: [
-                        { nombre: "3.2.1", clase: "btn-b3-t", desc: "Crisis - Subcomponente 1." },
-                        { nombre: "3.2.2", clase: "btn-b3-t", desc: "Crisis - Subcomponente 2." }
+                        { nombre: "3.2.1", desc: "Crisis - Subcomponente 1." },
+                        { nombre: "3.2.2", desc: "Crisis - Subcomponente 2." }
                     ]
                 },
                 { 
                     nombre: "3.3 Situaciones de Suicidio", 
-                    clase: "btn-b3-s",
                     nietos: [
-                        { nombre: "3.3.1", clase: "btn-b3-t", desc: "Suicidio - Subcomponente 1." },
-                        { nombre: "3.3.2", clase: "btn-b3-t", desc: "Suicidio - Subcomponente 2." }
+                        { nombre: "3.3.1", desc: "Suicidio - Subcomponente 1." },
+                        { nombre: "3.3.2", desc: "Suicidio - Subcomponente 2." }
                     ]
                 }
             ]
         },
         rubricas: {
             nombre: "4. Rúbricas de Consultas",
-            claseBtn: "btn-b4-p",
+            claseSelect: "select-b4",
             hijos: [
-                { nombre: "4.1 Escalas de Evaluación Clínica", clase: "btn-b4-s", desc: "Instrumentos estandarizados de medición." },
-                { nombre: "4.2 Indicadores de Convergencia", clase: "btn-b4-s", desc: "Parámetros de evolución conjunta." }
+                { nombre: "4.1 Escalas de Evaluación Clínica", desc: "Instrumentos estandarizados de medición." },
+                { nombre: "4.2 Indicadores de Convergencia", desc: "Parámetros de evolución conjunta." }
             ]
         },
         historia: {
             nombre: "5. Historia Clínica",
-            claseBtn: "btn-b5-p",
+            claseSelect: "select-b5",
             hijos: [
-                { nombre: "5.1 Registro de Sesiones", clase: "btn-b5-s", desc: "Bitácora cronológica e intervenciones registradas." },
-                { nombre: "5.2 Evoluciones y Notas Clínicas", clase: "btn-b5-s", desc: "Historial de progresos terapéuticos." }
+                { nombre: "5.1 Registro de Sesiones", desc: "Bitácora cronológica e intervenciones registradas." },
+                { nombre: "5.2 Evoluciones y Notas Clínicas", desc: "Historial de progresos terapéuticos." }
             ]
         },
         salir: {
             nombre: "6. Salir",
-            claseBtn: "btn-b6-p",
+            claseSelect: "select-b6",
             accion: () => ejecutarSalidaCinematografica()
         }
     };
@@ -206,95 +194,125 @@ document.addEventListener('DOMContentLoaded', () => {
         if (usr === "DRPEREYRA" && pwd === "235689") {
             loginSection.classList.add('hidden');
             appSection.classList.remove('hidden');
-            inicializarMenu();
+            inicializarMenuPrincipal();
         } else {
             loginError.textContent = "Credenciales incorrectas. Verifique usuario y contraseña.";
         }
     }
 
-    function inicializarMenu() {
+    function inicializarMenuPrincipal() {
         linea1.innerHTML = '';
         linea2.innerHTML = '';
         linea3.innerHTML = '';
 
+        const selectPrincipal = document.createElement('select');
+        selectPrincipal.className = 'app-select select-b1';
+        
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = "";
+        defaultOpt.textContent = "-- Seleccione Categoría Principal --";
+        selectPrincipal.appendChild(defaultOpt);
+
         Object.keys(menuData).forEach(key => {
             const item = menuData[key];
-            const btn = document.createElement('button');
-            btn.className = `app-btn ${item.claseBtn}`;
-            btn.textContent = item.nombre;
-
-            btn.addEventListener('click', () => {
-                linea1.querySelectorAll('.app-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                linea2.innerHTML = '';
-                linea3.innerHTML = '';
-
-                if (item.accion) {
-                    item.accion();
-                } else if (item.hijos) {
-                    cargarLinea2(item.hijos);
-                }
-            });
-
-            linea1.appendChild(btn);
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = item.nombre;
+            selectPrincipal.appendChild(opt);
         });
 
-        const primerBtn = linea1.querySelector('button');
-        if (primerBtn) primerBtn.click();
+        selectPrincipal.addEventListener('change', (e) => {
+            const key = e.target.value;
+            linea2.innerHTML = '';
+            linea3.innerHTML = '';
+
+            if (!key) return;
+
+            selectPrincipal.className = `app-select ${menuData[key].claseSelect || 'select-b1'}`;
+
+            if (menuData[key].accion) {
+                menuData[key].accion();
+            } else if (menuData[key].hijos) {
+                cargarSelectLinea2(menuData[key].hijos, menuData[key].claseSelect);
+            }
+        });
+
+        linea1.appendChild(selectPrincipal);
     }
 
-    function cargarLinea2(hijos) {
+    function cargarSelectLinea2(hijos, clasePadre) {
         linea2.innerHTML = '';
         linea3.innerHTML = '';
 
-        hijos.forEach(hijo => {
-            const btn = document.createElement('button');
-            btn.className = `app-btn ${hijo.clase}`;
-            btn.textContent = hijo.nombre;
+        const selectL2 = document.createElement('select');
+        selectL2.className = `app-select ${clasePadre || 'select-b2'}`;
 
-            btn.addEventListener('click', () => {
-                linea2.querySelectorAll('.app-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = "";
+        defaultOpt.textContent = "-- Seleccione Subcategoría --";
+        selectL2.appendChild(defaultOpt);
 
-                linea3.innerHTML = '';
-
-                if (hijo.link) {
-                    mostrarIframe(hijo.link);
-                } else if (hijo.desc) {
-                    mostrarTexto(hijo.nombre, hijo.desc);
-                }
-
-                if (hijo.nietos) {
-                    cargarLinea3(hijo.nietos);
-                }
-            });
-
-            linea2.appendChild(btn);
+        hijos.forEach((hijo, index) => {
+            const opt = document.createElement('option');
+            opt.value = index;
+            opt.textContent = hijo.nombre;
+            selectL2.appendChild(opt);
         });
+
+        selectL2.addEventListener('change', (e) => {
+            const idx = e.target.value;
+            linea3.innerHTML = '';
+
+            if (idx === "") return;
+
+            const hijoSeleccionado = hijos[idx];
+
+            if (hijoSeleccionado.link) {
+                mostrarIframe(hijoSeleccionado.link);
+            } else if (hijoSeleccionado.desc) {
+                mostrarTexto(hijoSeleccionado.nombre, hijoSeleccionado.desc);
+            }
+
+            if (hijoSeleccionado.nietos) {
+                cargarSelectLinea3(hijoSeleccionado.nietos, clasePadre);
+            }
+        });
+
+        linea2.appendChild(selectL2);
     }
 
-    function cargarLinea3(nietos) {
+    function cargarSelectLinea3(nietos, clasePadre) {
         linea3.innerHTML = '';
 
-        nietos.forEach(nieto => {
-            const btn = document.createElement('button');
-            btn.className = `app-btn ${nieto.clase}`;
-            btn.textContent = nieto.nombre;
+        const selectL3 = document.createElement('select');
+        selectL3.className = `app-select ${clasePadre || 'select-b3'}`;
 
-            btn.addEventListener('click', () => {
-                linea3.querySelectorAll('.app-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = "";
+        defaultOpt.textContent = "-- Seleccione Opción Final --";
+        selectL3.appendChild(defaultOpt);
 
-                if (nieto.link) {
-                    mostrarIframe(nieto.link);
-                } else if (nieto.desc) {
-                    mostrarTexto(nieto.nombre, nieto.desc);
-                }
-            });
-
-            linea3.appendChild(btn);
+        nietos.forEach((nieto, index) => {
+            const opt = document.createElement('option');
+            opt.value = index;
+            opt.textContent = nieto.nombre;
+            selectL3.appendChild(opt);
         });
+
+        selectL3.addEventListener('change', (e) => {
+            const idx = e.target.value;
+            if (idx === "") return;
+
+            const nietoSeleccionado = nietos[idx];
+
+            if (nietoSeleccionado.link) {
+                mostrarIframe(nietoSeleccionado.link);
+            } else if (nietoSeleccionado.desc) {
+                mostrarTexto(nietoSeleccionado.nombre, nietoSeleccionado.desc);
+            }
+        });
+
+        linea3.appendChild(selectL3);
     }
 
     function mostrarTexto(titulo, desc) {
@@ -310,7 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function ejecutarSalidaCinematografica() {
-        // Crear overlay cinematográfico dinámico con animación vectorial SVG y efectos lumínicos
         const overlay = document.createElement('div');
         overlay.style.cssText = `
             position: fixed;
