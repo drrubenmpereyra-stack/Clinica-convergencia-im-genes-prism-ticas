@@ -211,6 +211,30 @@
             display: none;
         }
 
+        /* Estilo para los menús desplegables (Selects) que reemplazan la saturación de botones */
+        select.app-select {
+            padding: 9px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 2px solid var(--purple-border);
+            border-radius: 8px;
+            cursor: pointer;
+            background: rgba(28, 25, 42, 0.9);
+            color: #e2b7ff;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        select.app-select:hover {
+            box-shadow: var(--purple-glow);
+        }
+
+        select.app-select option {
+            background: #1c192a;
+            color: #fff;
+        }
+
         button.app-btn {
             padding: 8px 14px;
             font-size: 0.85rem;
@@ -229,35 +253,7 @@
             border-color: var(--purple-border);
         }
 
-        button.app-btn.active {
-            box-shadow: var(--purple-glow);
-            border-color: var(--purple-border);
-            transform: scale(1.03);
-        }
-
-        .btn-b1-p { background-color: var(--b1-primary); color: #5a1a24; }
-        .btn-b1-s { background-color: var(--b1-secondary); color: #5a1a24; }
-        .btn-b1-t { background-color: var(--b1-tertiary); color: #5a1a24; }
-
-        .btn-b2-p { background-color: var(--b2-primary); color: #5a381a; }
-        .btn-b2-s { background-color: var(--b2-secondary); color: #5a381a; }
-        .btn-b2-t { background-color: var(--b2-tertiary); color: #5a381a; }
-
-        .btn-b3-p { background-color: var(--b3-primary); color: #5a5a1a; }
-        .btn-b3-s { background-color: var(--b3-secondary); color: #5a5a1a; }
-        .btn-b3-t { background-color: var(--b3-tertiary); color: #5a5a1a; }
-
-        .btn-b4-p { background-color: var(--b4-primary); color: #1a5a2b; }
-        .btn-b4-s { background-color: var(--b4-secondary); color: #1a5a2b; }
-        .btn-b4-t { background-color: var(--b4-tertiary); color: #1a5a2b; }
-
-        .btn-b5-p { background-color: var(--b5-primary); color: #1a3c5a; }
-        .btn-b5-s { background-color: var(--b5-secondary); color: #1a3c5a; }
-        .btn-b5-t { background-color: var(--b5-tertiary); color: #1a3c5a; }
-
         .btn-b6-p { background-color: var(--b6-primary); color: #3c1a5a; }
-        .btn-b6-s { background-color: var(--b6-secondary); color: #3c1a5a; }
-        .btn-b6-t { background-color: var(--b6-tertiary); color: #3c1a5a; }
 
         .output-display {
             margin-top: 15px;
@@ -315,6 +311,7 @@
             </div>
         </header>
 
+        <!-- Contenedor optimizado con menús desplegables -->
         <div class="menu-container">
             <div id="linea-1" class="menu-line"></div>
             <div id="linea-2" class="menu-line"></div>
