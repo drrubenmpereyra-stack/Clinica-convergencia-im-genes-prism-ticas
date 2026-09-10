@@ -3,60 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clínica de la Convergencia</title>
+    <title>Clínica de la Convergencia - Acceso</title>
     <style>
-        /* Estilos generales y fondo */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: url('background.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #2c3e50;
-            min-height: 100vh;
+        :root {
+            --b1-primary: #ffb3ba; --b1-secondary: #ffccd5; --b1-tertiary: #ffe6eb;
+            --b2-primary: #ffdfba; --b2-secondary: #ffeacc; --b2-tertiary: #fff4e6;
+            --b3-primary: #ffffba; --b3-secondary: #ffffcc; --b3-tertiary: #ffffe6;
+            --b4-primary: #baffc9; --b4-secondary: #d0f7d8; --b4-tertiary: #e6faeb;
+            --b5-primary: #bae1ff; --b5-secondary: #d0ebff; --b5-tertiary: #e6f4ff;
+            --b6-primary: #e8baff; --b6-secondary: #f0ccff; --b6-tertiary: #f7e6ff;
+
+            --purple-glow: 0 0 12px rgba(186, 85, 211, 0.6), 0 0 24px rgba(160, 32, 240, 0.4);
+            --purple-border: #ba55d3;
         }
 
-        /* Pantalla de Login */
-        #login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.85);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #f1f1f1;
+            margin: 0;
+            padding: 15px 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            z-index: 9999;
-            backdrop-filter: blur(5px);
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .view-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        #login-section {
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            background: rgba(18, 16, 28, 0.88);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            width: 100%;
+            max-width: 420px;
             text-align: center;
-            max-width: 380px;
-            width: 90%;
-            border-top: 4px solid #1e3a8a;
+            box-sizing: border-box;
         }
 
-        .login-card img {
-            max-height: 70px;
+        .login-logo {
+            width: 100px;
+            height: auto;
+            border-radius: 10px;
             margin-bottom: 15px;
+            border: 1px solid rgba(186, 85, 211, 0.4);
+            box-shadow: 0 0 10px rgba(160, 32, 240, 0.3);
         }
 
-        .login-card h2 {
+        .login-title {
+            color: #e2b7ff;
             font-size: 1.4rem;
-            color: #1e3a8a;
-            margin: 0 0 5px 0;
-        }
-
-        .login-card p {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-shadow: 0 2px 6px rgba(160, 32, 240, 0.4);
         }
 
         .form-group {
@@ -66,268 +88,247 @@
 
         .form-group label {
             display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #475569;
+            font-size: 0.85rem;
+            color: #d8b4fe;
             margin-bottom: 5px;
         }
 
         .form-group input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            box-sizing: border-box;
-        }
-
-        .btn-ingresar {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            color: white;
-            border: none;
-            border-radius: 6px;
+            padding: 10px 12px;
+            background: rgba(28, 25, 42, 0.8);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            border-radius: 8px;
+            color: #fff;
             font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s, transform 0.1s;
-            margin-top: 10px;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s ease;
         }
 
-        .btn-ingresar:hover {
-            opacity: 0.9;
+        .form-group input:focus {
+            border-color: var(--purple-border);
+            box-shadow: var(--purple-glow);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 11px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 5px;
+            box-shadow: 0 4px 10px rgba(160, 32, 240, 0.4);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--purple-glow);
         }
 
         .error-msg {
-            color: #dc2626;
+            color: #ff8080;
             font-size: 0.85rem;
             margin-top: 10px;
-            display: none;
+            min-height: 20px;
         }
 
-        /* Aplicación principal (oculta hasta login) */
-        #app-container {
-            display: none;
+        #app-section {
+            margin-top: 5px;
         }
 
-        /* Encabezado Obligatorio */
-        header {
-            background: rgba(255, 255, 255, 0.92);
-            padding: 15px 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border-bottom: 3px solid #1e3a8a;
-        }
-
-        .logo-container {
+        .app-header {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 20px;
-            flex-wrap: wrap;
-            text-align: center;
+            background: rgba(18, 16, 28, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid rgba(186, 85, 211, 0.25);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
         }
 
-        .logo-container img {
-            max-height: 75px;
-            width: auto;
+        .header-logo {
+            width: 65px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid rgba(186, 85, 211, 0.4);
         }
 
-        .titles-container h1 {
+        .header-titles h1 {
+            color: #e2b7ff;
+            margin: 0 0 3px 0;
+            font-size: 1.45rem;
+            text-shadow: 0 2px 6px rgba(160, 32, 240, 0.4);
+        }
+
+        .header-titles p {
+            color: #d8b4fe;
             margin: 0;
-            font-size: 1.7rem;
-            color: #1e3a8a;
-            font-weight: 700;
+            font-size: 0.85rem;
+            opacity: 0.85;
         }
 
-        .titles-container h2 {
-            margin: 4px 0 0 0;
-            font-size: 1.05rem;
-            color: #475569;
-            font-weight: 500;
-            font-style: italic;
-        }
-
-        /* Botonera en filas horizontales con Degradé */
-        .nav-container {
-            margin-top: 15px;
-            background: rgba(241, 245, 249, 0.95);
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .fila-botones {
+        .menu-container {
             display: flex;
-            justify-content: center;
-            gap: 8px;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            background: rgba(18, 16, 28, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(186, 85, 211, 0.25);
+            box-sizing: border-box;
+        }
+
+        .menu-line {
+            display: flex;
             flex-wrap: wrap;
-            margin-bottom: 6px;
+            gap: 10px;
+            justify-content: center;
+            min-height: 40px;
+            align-items: center;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(28, 25, 42, 0.6);
+            border: 1px dashed rgba(186, 85, 211, 0.3);
         }
 
-        .fila-botones:last-child {
-            margin-bottom: 0;
+        .menu-line:empty {
+            display: none;
         }
 
-        /* Sistema de Botones con Degradados armónicos */
-        .btn-menu {
-            border: none;
+        button.app-btn {
             padding: 8px 14px;
-            border-radius: 5px;
-            cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
-            color: white;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            outline: none;
         }
 
-        .btn-menu:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.1);
+        button.app-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--purple-glow);
+            border-color: var(--purple-border);
         }
 
-        .btn-menu:active {
-            transform: translateY(1px);
+        button.app-btn.active {
+            box-shadow: var(--purple-glow);
+            border-color: var(--purple-border);
+            transform: scale(1.03);
         }
 
-        /* Jerarquía de colores en degradé */
-        .btn-nivel-1 {
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-        }
-        .btn-nivel-2 {
-            background: linear-gradient(135deg, #0d9488, #14b8a6);
-        }
-        .btn-nivel-3 {
-            background: linear-gradient(135deg, #475569, #64748b);
-        }
-        .btn-salir {
-            background: linear-gradient(135deg, #991b1b, #ef4444);
-        }
+        .btn-b1-p { background-color: var(--b1-primary); color: #5a1a24; }
+        .btn-b1-s { background-color: var(--b1-secondary); color: #5a1a24; }
+        .btn-b1-t { background-color: var(--b1-tertiary); color: #5a1a24; }
 
-        /* Contenido Dinámico Independiente */
-        main {
-            padding: 30px;
-            max-width: 1250px;
-            margin: 25px auto;
-            background-color: rgba(255, 255, 255, 0.94);
-            border-radius: 10px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-            min-height: 450px;
-        }
+        .btn-b2-p { background-color: var(--b2-primary); color: #5a381a; }
+        .btn-b2-s { background-color: var(--b2-secondary); color: #5a381a; }
+        .btn-b2-t { background-color: var(--b2-tertiary); color: #5a381a; }
 
-        /* Pantalla de Despedida Vectorial */
-        #despedida-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .btn-b3-p { background-color: var(--b3-primary); color: #5a5a1a; }
+        .btn-b3-s { background-color: var(--b3-secondary); color: #5a5a1a; }
+        .btn-b3-t { background-color: var(--b3-tertiary); color: #5a5a1a; }
+
+        .btn-b4-p { background-color: var(--b4-primary); color: #1a5a2b; }
+        .btn-b4-s { background-color: var(--b4-secondary); color: #1a5a2b; }
+        .btn-b4-t { background-color: var(--b4-tertiary); color: #1a5a2b; }
+
+        .btn-b5-p { background-color: var(--b5-primary); color: #1a3c5a; }
+        .btn-b5-s { background-color: var(--b5-secondary); color: #1a3c5a; }
+        .btn-b5-t { background-color: var(--b5-tertiary); color: #1a3c5a; }
+
+        .btn-b6-p { background-color: var(--b6-primary); color: #3c1a5a; }
+        .btn-b6-s { background-color: var(--b6-secondary); color: #3c1a5a; }
+        .btn-b6-t { background-color: var(--b6-tertiary); color: #3c1a5a; }
+
+        .output-display {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(18, 16, 28, 0.88);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(186, 85, 211, 0.25);
             width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            animation: fadeIn 0.5s ease-in-out;
+            box-sizing: border-box;
+            color: #d8b4fe;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            min-height: 100px;
         }
 
-        .despedida-card {
+        .db-status {
+            font-size: 0.8rem;
+            color: #c084fc;
+            margin-top: 8px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
             text-align: center;
-            color: white;
-            padding: 30px;
-        }
-
-        .despedida-card svg {
-            width: 90px;
-            height: 90px;
-            margin-bottom: 20px;
-            animation: pulseIcon 1.5s infinite alternate;
-        }
-
-        .despedida-card h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            color: #38bdf8;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes pulseIcon {
-            0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(56,189,248,0.5)); }
-            100% { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(56,189,248,0.9)); }
+            width: 100%;
         }
     </style>
-
-    <!-- Firebase App (Compat SDKs para fácil integración síncrona en cliente) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
     <!-- PANTALLA DE LOGIN -->
-    <div id="login-overlay">
+    <div id="login-section" class="view-section">
         <div class="login-card">
-            <img src="logotipo.jpg" alt="Logo">
-            <h2>Clínica de la Convergencia</h2>
-            <p>Imágenes prismáticas de psicoanálisis y neurociencia</p>
-            
-            <div class="form-group">
-                <label for="user-input">Usuario:</label>
-                <input type="text" id="user-input" placeholder="Ingrese usuario">
-            </div>
-            <div class="form-group">
-                <label for="pass-input">Contraseña:</label>
-                <input type="password" id="pass-input" placeholder="Ingrese contraseña">
-            </div>
-
-            <button class="btn-ingresar" id="btn-login">INGRESAR</button>
-            <div class="error-msg" id="login-error">Credenciales incorrectas. Verifique usuario y contraseña.</div>
+            <h2 class="login-title">Clínica de la Convergencia</h2>
+            <img src="logotipo.jpg" alt="Logotipo Clínica" class="login-logo">
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" required autocomplete="username" placeholder="DRPEREYRA">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" required autocomplete="current-password" placeholder="••••••">
+                </div>
+                <button type="submit" class="login-btn">Ingresar al Sistema</button>
+                <div id="login-error" class="error-msg"></div>
+            </form>
         </div>
     </div>
 
     <!-- APLICACIÓN PRINCIPAL -->
-    <div id="app-container">
-        <!-- ENCABEZADO OBLIGATORIO -->
-        <header>
-            <div class="logo-container">
-                <img src="logotipo.jpg" alt="Logotipo Clínica de la Convergencia">
-                <div class="titles-container">
-                    <h1>Clínica de la Convergencia</h1>
-                    <h2>Imágenes prismáticas de psicoanálisis y neurociencia</h2>
-                </div>
-            </div>
-
-            <!-- Botonera multinivel en filas horizontales -->
-            <div class="nav-container" id="menu-container">
-                <div class="fila-botones" id="fila-1"></div>
-                <div class="fila-botones" id="fila-2"></div>
-                <div class="fila-botones" id="fila-3"></div>
+    <div id="app-section" class="view-section hidden">
+        <header class="app-header">
+            <img src="logotipo.jpg" alt="Logotipo" class="header-logo">
+            <div class="header-titles">
+                <h1>Clínica de la Convergencia</h1>
+                <p>Imágenes prismáticas de Psicoanálisis y Neurociencias</p>
             </div>
         </header>
 
-        <!-- CONTENIDO DINÁMICO INDEPENDIENTE -->
-        <main id="contenido-principal">
-            <h2>Bienvenido, Dr. Pereyra</h2>
-            <p>Seleccione una opción de la barra de navegación superior para acceder a los módulos clínicos, registros de sesiones o herramientas de análisis.</p>
-        </main>
-    </div>
-
-    <!-- MODAL / PANTALLA DE DESPEDIDA VECTORIAL -->
-    <div id="despedida-overlay">
-        <div class="despedida-card">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                <line x1="12" y1="22.08" x2="12" y2="12"></line>
-            </svg>
-            <h2>Gracias por utilizar Visiones prismáticas Convergencia, hasta la próxima.</h2>
+        <div class="menu-container">
+            <div id="linea-1" class="menu-line"></div>
+            <div id="linea-2" class="menu-line"></div>
+            <div id="linea-3" class="menu-line"></div>
         </div>
+
+        <div id="output" class="output-display">Selecciona una opción del menú superior para comenzar...</div>
+        <div id="db-status" class="db-status">Iniciando conexión con Firebase...</div>
     </div>
 
-    <!-- Lógica de la aplicación y Firebase -->
+    <!-- SDKs de Firebase (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Archivo lógico -->
     <script src="app.js"></script>
 </body>
 </html>
