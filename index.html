@@ -192,6 +192,8 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(186, 85, 211, 0.25);
             box-sizing: border-box;
+            position: relative;
+            z-index: 9999;
         }
 
         .menu-line {
@@ -211,10 +213,11 @@
             display: none;
         }
 
-        /* Estilos de Menú Desplegable en Cascada (Dropdown / Flyout) con Hover */
+        /* Estilos de Menú Desplegable en Cascada (Dropdown / Flyout) con Hover y Z-index elevado */
         .dropdown {
             position: relative;
             display: inline-block;
+            z-index: 10000;
         }
 
         button.app-btn {
@@ -241,13 +244,13 @@
             position: absolute;
             top: 100%;
             left: 0;
-            background: rgba(18, 16, 28, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(18, 16, 28, 0.98);
+            backdrop-filter: blur(12px);
             min-width: 280px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
             border-radius: 8px;
-            border: 1px solid rgba(186, 85, 211, 0.3);
-            z-index: 1000;
+            border: 1px solid rgba(186, 85, 211, 0.4);
+            z-index: 10001;
             padding: 6px 0;
         }
 
@@ -257,6 +260,7 @@
 
         .dropdown-submenu {
             position: relative;
+            z-index: 10002;
         }
 
         .dropdown-submenu .submenu-content {
@@ -264,13 +268,13 @@
             position: absolute;
             top: 0;
             left: 100%;
-            background: rgba(18, 16, 28, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(18, 16, 28, 0.98);
+            backdrop-filter: blur(12px);
             min-width: 280px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
             border-radius: 8px;
-            border: 1px solid rgba(186, 85, 211, 0.3);
-            z-index: 1001;
+            border: 1px solid rgba(186, 85, 211, 0.4);
+            z-index: 10003;
             padding: 6px 0;
         }
 
