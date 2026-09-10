@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     clase: "btn-b2-s",
                     nietos: [
                         { nombre: "2.1.1 Aquí y ahora - HPA", link: "aqui_y_ahora.html", clase: "btn-b2-t" },
-                        { nombre: "2.1.2 Validación empática como freno de emergencia", clase: "btn-b2-t", desc: "Técnica de regulación afectiva y freno de emergencia en desbordes." },
+                        { nombre: "2.1.2 Validación empática como freno de emergencia", link: "validacion_freno.html",  clase: "btn-b2-t", desc: "Técnica de regulación afectiva y freno de emergencia en desbordes." },
                         { nombre: "2.1.3 Monitoreo y uso contratransferencia somática", clase: "btn-b2-t", desc: "Lectura de marcadores somáticos del analista como brújula clínica." },
                         { nombre: "2.1.4 Encuadre, sincronización vocal, focusing e interpretación", clase: "btn-b2-t", desc: "Convergencia entre sincronía prosódica, focusing corporal e intervención." }
                     ]
