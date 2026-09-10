@@ -185,3 +185,199 @@ document.addEventListener('DOMContentLoaded', () => {
             accion: () => ejecutarSalidaCinematografica()
         }
     };
+
+    const btnLoginSubmit = loginForm.querySelector('button[type="submit"]');
+    if (btnLoginSubmit) {
+        btnLoginSubmit.addEventListener('click', (e) => {
+            e.preventDefault();
+            procesarLogin();
+        });
+    }
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        procesarLogin();
+    });
+
+    function procesarLogin() {
+        const usr = usernameInput.value.trim();
+        const pwd = passwordInput.value.trim();
+
+        if (usr === "DRPEREYRA" && pwd === "235689") {
+            loginSection.classList.add('hidden');
+            appSection.classList.remove('hidden');
+            inicializarMenuCascada();
+        } else {
+            loginError.textContent = "Credenciales incorrectas. Verifique usuario y contraseña.";
+        }
+    }
+
+    // Renderizar menú superior con botones principales y despliegue en cascada por hover
+    function inicializarMenuCascada() {
+        linea1.innerHTML = '';
+
+        Object.keys(menuData).forEach(key => {
+            const item = menuData[key];
+
+            if (item.accion) {
+                // Botón directo para acciones como Salir
+                const btnSalir = document.createElement('button');
+                btnSalir.className = `app-btn ${item.claseBtn}`;
+                btnSalir.textContent = item.nombre;
+                btnSalir.addEventListener('click', item.accion);
+                linea1.appendChild(btnSalir);
+                return;
+            }
+
+            const dropdownDiv = document.createElement('div');
+            dropdownDiv.className = 'dropdown';
+
+            const btnMain = document.createElement('button');
+            btnMain.className = `app-btn ${item.claseBtn}`;
+            btnMain.textContent = item.nombre;
+            dropdownDiv.appendChild(btnMain);
+
+            if (item.hijos && item.hijos.length > 0) {
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'dropdown-content';
+
+                item.hijos.forEach(hijo => {
+                    if (hijo.nietos && hijo.nietos.length > 0) {
+                        // Submenú en cascada adicional (Nietos)
+                        const submenuDiv = document.createElement('div');
+                        submenuDiv.className = 'dropdown-submenu';
+
+                        const subBtn = document.createElement('button');
+                        subBtn.className = `dropdown-item ${hijo.clase || ''}`;
+                        subBtn.textContent = hijo.nombre + " ▸";
+                        submenuDiv.appendChild(subBtn);
+
+                        const subContentDiv = document.createElement('div');
+                        subContentDiv.className = 'submenu-content';
+
+                        hijo.nietos.forEach(nieto => {
+                            const nietoItem = document.createElement('button');
+                            nietoItem.className = `dropdown-item ${nieto.clase || ''}`;
+                            nietoItem.textContent = nieto.nombre;
+                            nietoItem.addEventListener('click', () => {
+                                if (nieto.link) {
+                                    mostrarIframe(nieto.link);
+                                } else if (nieto.desc) {
+                                    mostrarTexto(nieto.nombre, nieto.desc);
+                                }
+                            });
+                            subContentDiv.appendChild(nietoItem);
+                        });
+
+                        submenuDiv.appendChild(subContentDiv);
+                        contentDiv.appendChild(submenuDiv);
+                    } else {
+                        // Elemento hijo directo
+                        const hijoItem = document.createElement('button');
+                        hijoItem.className = `dropdown-item ${hijo.clase || ''}`;
+                        hijoItem.textContent = hijo.nombre;
+                        hijoItem.addEventListener('click', () => {
+                            if (hijo.link) {
+                                mostrarIframe(hijo.link);
+                            } else if (hijo.desc) {
+                                mostrarTexto(hijo.nombre, hijo.desc);
+                            }
+                        });
+                        contentDiv.appendChild(hijoItem);
+                    }
+                });
+
+                dropdownDiv.appendChild(contentDiv);
+            }
+
+            linea1.appendChild(dropdownDiv);
+        });
+    }
+
+    function mostrarTexto(titulo, desc) {
+        outputDisplay.innerHTML = `<strong>${titulo}</strong><br><span style="color:#d8b4fe;">${desc}</span>`;
+    }
+
+    function mostrarIframe(url) {
+        outputDisplay.innerHTML = `
+            <div style="width: 100%; height: 550px; overflow: hidden; background: transparent;">
+                <iframe src="${url}" style="width: 100%; height: 100%; border: none; background: transparent;" title="Módulo Externo Independiente"></iframe>
+            </div>
+        `;
+    }
+
+    function ejecutarSalidaCinematografica() {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #181028 0%, #0a0612 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            box-sizing: border-box;
+            padding: 20px;
+            text-align: center;
+        `;
+
+        overlay.innerHTML = `
+            <style>
+                @keyframes spinPrism {
+                    0% { transform: rotate(0deg) scale(0.95); filter: drop-shadow(0 0 15px rgba(186,85,211,0.6)); }
+                    50% { transform: rotate(180deg) scale(1.05); filter: drop-shadow(0 0 35px rgba(216,180,254,0.9)); }
+                    100% { transform: rotate(360deg) scale(0.95); filter: drop-shadow(0 0 15px rgba(186,85,211,0.6)); }
+                }
+                @keyframes pulseWave {
+                    0% { opacity: 0.3; transform: scale(0.9); }
+                    50% { opacity: 0.8; transform: scale(1.1); }
+                    100% { opacity: 0.3; transform: scale(0.9); }
+                }
+                @keyframes textFadeUp {
+                    0% { opacity: 0; transform: translateY(20px); }
+                    100% { opacity: 1; transform: translateY(0); }
+                }
+                .prism-svg {
+                    width: 120px;
+                    height: 120px;
+                    animation: spinPrism 6s linear infinite;
+                    margin-bottom: 25px;
+                }
+                .cinematic-text {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    color: #f3e8ff;
+                    font-size: 1.5rem;
+                    font-weight: 500;
+                    letter-spacing: 0.05em;
+                    text-shadow: 0 0 20px rgba(186,85,211,0.8);
+                    animation: textFadeUp 1.2s ease forwards;
+                    max-width: 650px;
+                    line-height: 1.4;
+                }
+            </style>
+            <svg class="prism-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="50,10 90,80 10,80" stroke="#d8b4fe" stroke-width="2" stroke-linejoin="round" fill="rgba(186,85,211,0.15)" />
+                <polygon points="50,30 75,70 25,70" stroke="#c084fc" stroke-width="1.5" stroke-linejoin="round" fill="rgba(160,32,240,0.2)" />
+                <circle cx="50" cy="50" r="6" fill="#f3e8ff" style="animation: pulseWave 2s infinite ease-in-out;" />
+                <line x1="50" y1="10" x2="50" y2="50" stroke="#e2b7ff" stroke-width="1" stroke-dasharray="3 3" />
+            </svg>
+            <div class="cinematic-text">Gracias por utilizar Visiones prismáticas Convergencia, hasta la próxima.</div>
+        `;
+
+        document.body.appendChild(overlay);
+        setTimeout(() => { overlay.style.opacity = '1'; }, 50);
+
+        setTimeout(() => {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                location.reload();
+            }, 800);
+        }, 3500);
+    }
+});
