@@ -211,41 +211,15 @@
             display: none;
         }
 
-        /* Estilo para los menús desplegables con sus colores originales */
-        select.app-select {
-            padding: 9px 15px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            border: 2px solid transparent;
+        /* Estilos de Menú Desplegable en Cascada (Dropdown / Flyout) con Hover */
+        .dropdown {
+            position: relative;
+            display: inline-block;
         }
-
-        select.app-select:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--purple-glow);
-            border-color: var(--purple-border);
-        }
-
-        select.app-select option {
-            background: #1c192a;
-            color: #fff;
-        }
-
-        /* Clases de colores pasteles aplicadas a los selectores desplegables */
-        .select-b1 { background-color: var(--b1-primary); color: #5a1a24; }
-        .select-b2 { background-color: var(--b2-primary); color: #5a381a; }
-        .select-b3 { background-color: var(--b3-primary); color: #5a5a1a; }
-        .select-b4 { background-color: var(--b4-primary); color: #1a5a2b; }
-        .select-b5 { background-color: var(--b5-primary); color: #1a3c5a; }
-        .select-b6 { background-color: var(--b6-primary); color: #3c1a5a; }
 
         button.app-btn {
-            padding: 8px 14px;
-            font-size: 0.85rem;
+            padding: 9px 16px;
+            font-size: 0.9rem;
             font-weight: 600;
             border: 2px solid transparent;
             border-radius: 8px;
@@ -253,6 +227,7 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             outline: none;
+            white-space: nowrap;
         }
 
         button.app-btn:hover {
@@ -261,6 +236,81 @@
             border-color: var(--purple-border);
         }
 
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(18, 16, 28, 0.95);
+            backdrop-filter: blur(10px);
+            min-width: 280px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            z-index: 1000;
+            padding: 6px 0;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu .submenu-content {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            background: rgba(18, 16, 28, 0.95);
+            backdrop-filter: blur(10px);
+            min-width: 280px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 8px;
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            z-index: 1001;
+            padding: 6px 0;
+        }
+
+        .dropdown-submenu:hover .submenu-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            border: none;
+            background: transparent;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(186, 85, 211, 0.25);
+            color: #e2b7ff;
+        }
+
+        /* Colores Pastel originales */
+        .btn-b1-p { background-color: var(--b1-primary); color: #5a1a24; }
+        .btn-b1-s { color: var(--b1-secondary); }
+        .btn-b2-p { background-color: var(--b2-primary); color: #5a381a; }
+        .btn-b2-s { color: var(--b2-secondary); }
+        .btn-b2-t { color: var(--b2-tertiary); }
+        .btn-b3-p { background-color: var(--b3-primary); color: #5a5a1a; }
+        .btn-b3-s { color: var(--b3-secondary); }
+        .btn-b4-p { background-color: var(--b4-primary); color: #1a5a2b; }
+        .btn-b4-s { color: var(--b4-secondary); }
+        .btn-b5-p { background-color: var(--b5-primary); color: #1a3c5a; }
+        .btn-b5-s { color: var(--b5-secondary); }
         .btn-b6-p { background-color: var(--b6-primary); color: #3c1a5a; }
 
         .output-display {
@@ -319,11 +369,9 @@
             </div>
         </header>
 
-        <!-- Contenedor optimizado con menús desplegables por categorías -->
+        <!-- Contenedor del Menú con botones principales y cascada en hover -->
         <div class="menu-container">
             <div id="linea-1" class="menu-line"></div>
-            <div id="linea-2" class="menu-line"></div>
-            <div id="linea-3" class="menu-line"></div>
         </div>
 
         <div id="output" class="output-display">Selecciona una opción del menú superior para comenzar...</div>
