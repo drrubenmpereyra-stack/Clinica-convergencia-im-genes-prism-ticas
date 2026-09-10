@@ -14,256 +14,374 @@ let db;
 try {
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
-    console.log("Firebase conectado exitosamente.");
+    const statusEl = document.getElementById('db-status');
+    if (statusEl) statusEl.textContent = 'Base de datos Firebase conectada correctamente.';
 } catch (error) {
     console.error("Error al inicializar Firebase:", error);
+    const statusEl = document.getElementById('db-status');
+    if (statusEl) statusEl.textContent = 'Error de conexión con Firebase.';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const loginOverlay = document.getElementById('login-overlay');
-    const appContainer = document.getElementById('app-container');
-    const userInput = document.getElementById('user-input');
-    const passInput = document.getElementById('pass-input');
-    const btnLogin = document.getElementById('btn-login');
+    const loginSection = document.getElementById('login-section');
+    const appSection = document.getElementById('app-section');
+    const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
 
-    const fila1 = document.getElementById('fila-1');
-    const fila2 = document.getElementById('fila-2');
-    const fila3 = document.getElementById('fila-3');
-    const contenidoPrincipal = document.getElementById('contenido-principal');
-    const despedidaOverlay = document.getElementById('despedida-overlay');
+    const linea1 = document.getElementById('linea-1');
+    const linea2 = document.getElementById('linea-2');
+    const linea3 = document.getElementById('linea-3');
+    const outputDisplay = document.getElementById('output');
 
-    // Validación de Login
-    btnLogin.addEventListener('click', realizarLogin);
-    passInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') realizarLogin();
-    });
-
-    function realizarLogin() {
-        const usuario = userInput.value.trim();
-        const password = passInput.value.trim();
-
-        if (usuario === "DRPEREYRA" && password === "235689") {
-            loginOverlay.style.display = 'none';
-            appContainer.style.display = 'block';
-            inicializarApp();
-        } else {
-            loginError.style.display = 'block';
-        }
-    }
-
-    // Estructura completa de la botonera y navegación
     const menuData = {
         admin: {
-            titulo: "1. Administración",
-            botonesFila2: [
-                { texto: '1.1 Pacientes', link: 'pacientes.html' },
-                { texto: '1.2 Contabilidad', vista: { titulo: '1.2 Contabilidad', desc: 'Módulo de gestión contable, honorarios y balance institucional.' } },
-                { texto: '1.3 Central formularios', vista: { titulo: '1.3 Central Formularios', desc: 'Repositorio unificado de fichas clínicas y escalas estandarizadas.' } }
+            nombre: "1. Administración",
+            claseBtn: "btn-b1-p",
+            hijos: [
+                { nombre: "1.1 Pacientes", link: "pacientes.html", clase: "btn-b1-s" },
+                { nombre: "1.2 Contabilidad", clase: "btn-b1-s", desc: "Módulo de gestión contable, honorarios y balance institucional." },
+                { nombre: "1.3 Central formularios", clase: "btn-b1-s", desc: "Repositorio unificado de fichas clínicas y escalas estandarizadas." }
             ]
         },
         estrategias: {
-            titulo: "2. Estrategias y Técnicas",
-            botonesFila2: [
-                { texto: '2.1 Cartografía de la Intersubjetividad', subgrupo: 'cartografia' },
-                { texto: '2.2 Memoria Traumática y el a posteriori', subgrupo: 'memoria' },
-                { texto: '2.3 Circuitos de recompensa', subgrupo: 'recompensa' },
-                { texto: '2.4 La interfaz cuerpo mente', subgrupo: 'cuerpomente' },
-                { texto: '2.5 Neurobiología de la repetición', subgrupo: 'repeticion' },
-                { texto: '2.6 Plasticidad simbólica y sináptica', subgrupo: 'plasticidad' },
-                { texto: '2.7 Arquitectura del sueño y función alucinatoria', subgrupo: 'sueno' },
-                { texto: '2.8 El Ello somático y T. Psicosomáticos', subgrupo: 'ello' },
-                { texto: '2.9 Focalización en estructuras límbicas', subgrupo: 'limbicas' },
-                { texto: '2.10 Ética de la singularidad en la era tecnológica', subgrupo: 'etica' }
-            ],
-            subgrupos: {
-                cartografia: [
-                    { texto: '2.1.1 Aquí y ahora - HPA', link: 'aqui_y_ahora.html' },
-                    { texto: '2.1.2 Validación empática como freno de emergencia', vista: { titulo: '2.1.2 Validación Empática', desc: 'Técnica de regulación afectiva y freno de emergencia en desbordes.' } },
-                    { texto: '2.1.3 Monitoreo y uso contratransferencia somática', vista: { titulo: '2.1.3 Contratransferencia Somática', desc: 'Lectura de marcadores somáticos del analista como brújula clínica.' } },
-                    { texto: '2.1.4 Encuadre, sincronización vocal, focusing e interpretación', vista: { titulo: '2.1.4 Encuadre y Focusing', desc: 'Convergencia entre sincronía prosódica, focusing corporal e intervención analítica.' } }
-                ],
-                memoria: [
-                    { texto: '2.2.1 [Configuración pendiente]', vista: { titulo: '2.2.1 Memoria Traumática - Componente A', desc: 'Módulo en desarrollo para procesamiento de huellas mnémicas.' } },
-                    { texto: '2.2.2 [Configuración pendiente]', vista: { titulo: '2.2.2 Memoria Traumática - Componente B', desc: 'Módulo en desarrollo para reestructuración del a posteriori.' } }
-                ],
-                recompensa: [
-                    { texto: '2.3.1 [Configuración pendiente]', vista: { titulo: '2.3.1 Circuitos de Recompensa - Dopamina', desc: 'Abordaje de la desregulación hedónica y circuitos dopaminérgicos.' } },
-                    { texto: '2.3.2 [Configuración pendiente]', vista: { titulo: '2.3.2 Circuitos de Recompensa - Regulación', desc: 'Estrategias de modulación del deseo y habituación.' } }
-                ],
-                cuerpomente: [
-                    { texto: '2.4.1 [Configuración pendiente]', vista: { titulo: '2.4.1 Interfaz Cuerpo Mente - Somatización', desc: 'Mapeo de la traducción somatosensorial.' } },
-                    { texto: '2.4.2 [Configuración pendiente]', vista: { titulo: '2.4.2 Interfaz Cuerpo Mente - Alexitimia', desc: 'Abordaje de pacientes con déficit en simbolización afectiva.' } }
-                ],
-                repeticion: [
-                    { texto: '2.5.1 [Configuración pendiente]', vista: { titulo: '2.5.1 Neurobiología de la Repetición - Automatismos', desc: 'Estudio de surcos sinápticos consolidados y compulsión.' } },
-                    { texto: '2.5.2 [Configuración pendiente]', vista: { titulo: '2.5.2 Neurobiología de la Repetición - Plasticidad Activa', desc: 'Protocolos de interrupción del circuito repetitivo.' } }
-                ],
-                plasticidad: [
-                    { texto: '2.6.1 [Configuración pendiente]', vista: { titulo: '2.6.1 Plasticidad Simbólica y Sináptica - Metáfora', desc: 'Impacto de la intervención significante en la neurogénesis.' } },
-                    { texto: '2.6.2 [Configuración pendiente]', vista: { titulo: '2.6.2 Plasticidad Simbólica y Sináptica - Consolidación', desc: 'Fijación de nuevas redes asociativas.' } }
-                ],
-                sueno: [
-                    { texto: '2.7.1 [Configuración pendiente]', vista: { titulo: '2.7.1 Arquitectura del Sueño - MOR y Procesamiento', desc: 'Rol del sueño REM en la metabolización afectiva.' } },
-                    { texto: '2.7.2 [Configuración pendiente]', vista: { titulo: '2.7.2 Función Alucinatoria - Onirismo Despierto', desc: 'Capacidad representacional y ensoñación.' } }
-                ],
-                ello: [
-                    { texto: '2.8.1 [Configuración pendiente]', vista: { titulo: '2.8.1 Ello Somático - Pulsión y Biología', desc: 'Anclaje biológico de las mociones pulsionales.' } },
-                    { texto: '2.8.2 [Configuración pendiente]', vista: { titulo: '2.8.2 Trastornos Psicosomáticos - Clínica del Órgano', desc: 'Abordaje convergente de patologías somáticas severas.' } }
-                ],
-                limbicas: [
-                    { texto: '2.9.1 [Configuración pendiente]', vista: { titulo: '2.9.1 Focalización en Estructuras Límbicas - Amígdala', desc: 'Regulación de reactividad amigdalina.' } },
-                    { texto: '2.9.2 [Configuración pendiente]', vista: { titulo: '2.9.2 Focalización en Estructuras Límbicas - Hipocampo', desc: 'Integración contextual de memorias emocionales.' } }
-                ],
-                etica: [
-                    { texto: '2.10.1 [Configuración pendiente]', vista: { titulo: '2.10.1 Ética de la Singularidad - Era Digital', desc: 'Sujeto y subjetividad en entornos algorítmicos.' } },
-                    { texto: '2.10.2 [Configuración pendiente]', vista: { titulo: '2.10.2 Ética de la Singularidad - Intimidad', desc: 'Preservación del psiquismo frente a la hiperconectividad.' } }
-                ]
-            }
+            nombre: "2. Estrategias y Técnicas",
+            claseBtn: "btn-b2-p",
+            hijos: [
+                {
+                    nombre: "2.1 Cartografía de la Intersubjetividad",
+                    clase: "btn-b2-s",
+                    nietos: [
+                        { nombre: "2.1.1 Aquí y ahora - HPA", link: "aqui_y_ahora.html", clase: "btn-b2-t" },
+                        { nombre: "2.1.2 Validación empática como freno de emergencia", clase: "btn-b2-t", desc: "Técnica de regulación afectiva y freno de emergencia en desbordes." },
+                        { nombre: "2.1.3 Monitoreo y uso contratransferencia somática", clase: "btn-b2-t", desc: "Lectura de marcadores somáticos del analista como brújula clínica." },
+                        { nombre: "2.1.4 Encuadre, sincronización vocal, focusing e interpretación", clase: "btn-b2-t", desc: "Convergencia entre sincronía prosódica, focusing corporal e intervención." }
+                    ]
+                },
+                {
+                    nombre: "2.2 Memoria Traumática y el a posteriori",
+                    clase: "btn-b2-s",
+                    nietos: [
+                        { nombre: "2.2.1", clase: "btn-b2-t", desc: "Componente A de Memoria Traumática." },
+                        { nombre: "2.2.2", clase: "btn-b2-t", desc: "Componente B de Memoria Traumática." }
+                    ]
+                },
+                {
+                    nombre: "2.3 Circuitos de recompensa",
+                    clase: "btn-b2-s",
+                    nietos: [
+                        { nombre: "2.3.1", clase: "btn-b2-t", desc: "Circuitos de recompensa - Subcomponente 1." },
+                        { nombre: "2.3.2", clase: "btn-b2-t", desc: "Circuitos de recompensa - Subcomponente 2." }
+                    ]
+                },
+                {
+                    nombre: "2.4 La interfaz cuerpo mente",
+                    clase: "btn-b2-s",
+                    nietos: [
+                        { nombre: "2.4.1", clase: "btn-b2-t", desc: "Interfaz cuerpo mente - Subcomponente 1." },
+                        { nombre: "2.4.2", clase: "btn-b2-t", desc: "Interfaz cuerpo mente - Subcomponente 2." }
+                    ]
+                },
+                {
+                    nombre: "2.5 Neurobiología de la repetición",
+                    clase: "btn-b2-s",
+                    nietos: [
+                        { nombre: "2.5.1", clase: "btn-b2-t", desc: "Neurobiología de la repetición - Subcomponente 1." },
+                        { nombre: "2.5.2", clase: "btn-b2-t", desc: "Neurobiología de la repetición - Subcomponente 2." }
+                    ]
+                },
+                {
+                    nombre: "2.6 Plasticidad simbólica y sináptica",
+                    clase: "btn-b2-s",
+                    nietos: [
+                        { nombre: "2.6.1", clase: "btn-b2-t", desc: "Plasticidad simbólica y sináptica - Subcomponente 1." },
+                        { nombre: "2.6.2", clase: "btn-b2-t", desc: "Plasticidad simbólica y sináptica - Subcomponente 2." }
+                    ]
+                },
+                {
+                    nombre: "2.7 Arquitectura del sueño y función alucinatoria",
+                    clase: "btn-b2-s",
+                    nietos: [
+                        { nombre: "2.7.1", clase: "btn-b2-t", desc: "Arquitectura del sueño - Subcomponente 1." },
+                        { nombre: "2.7.2", clase: "btn-b2-t", desc: "Arquitectura del sueño - Subcomponente 2." }
+                    ]
+                },
+                {
+                    nombre: "2.8 El Ello somático y T. Psicosomáticos",
+                    clase: "btn-b2-s",
+                    nietos: [
+                        { nombre: "2.8.1", clase: "btn-b2-t", desc: "Ello somático - Subcomponente 1." },
+                        { nombre: "2.8.2", clase: "btn-b2-t", desc: "Ello somático - Subcomponente 2." }
+                    ]
+                },
+                {
+                    nombre: "2.9 Focalización en estructuras límbicas",
+                    clase: "btn-b2-s",
+                    nietos: [
+                        { nombre: "2.9.1", clase: "btn-b2-t", desc: "Estructuras límbicas - Subcomponente 1." },
+                        { nombre: "2.9.2", clase: "btn-b2-t", desc: "Estructuras límbicas - Subcomponente 2." }
+                    ]
+                },
+                {
+                    nombre: "2.10 Ética de la singularidad en la era tecnológica",
+                    clase: "btn-b2-s",
+                    nietos: [
+                        { nombre: "2.10.1", clase: "btn-b2-t", desc: "Ética de la singularidad - Subcomponente 1." },
+                        { nombre: "2.10.2", clase: "btn-b2-t", desc: "Ética de la singularidad - Subcomponente 2." }
+                    ]
+                }
+            ]
         },
         especiales: {
-            titulo: "3. Estrategias especiales I",
-            botonesFila2: [
-                { texto: '3.1 Situaciones de duelo', vista: { titulo: '3.1 Situaciones de Duelo', desc: 'Protocolos de elaboración y duelo patológico.' } },
-                { texto: '3.1.1 [Subcomponente Duelo A]', vista: { titulo: '3.1.1 Duelo Agudo y Respuesta Somática', desc: 'Contención en fase aguda.' } },
-                { texto: '3.1.2 [Subcomponente Duelo B]', vista: { titulo: '3.1.2 Duelo Crónico y Melancolización', desc: 'Abordaje estructural.' } },
-                { texto: '3.2 Situaciones de crisis', vista: { titulo: '3.2 Situaciones de Crisis', desc: 'Intervención temprana en crisis subjetivas agudas.' } },
-                { texto: '3.2.1 [Subcomponente Crisis A]', vista: { titulo: '3.2.1 Evaluación de Riesgo Inmediato', desc: 'Protocolos de estabilización.' } },
-                { texto: '3.2.2 [Subcomponente Crisis B]', vista: { titulo: '3.2.2 Red de Apoyo y Derivación', desc: 'Coordinación interdisciplinaria.' } },
-                { texto: '3.3 Situaciones de Suicidio', vista: { titulo: '3.3 Situaciones de Suicidio', desc: 'Prevención, contención y evaluación de ideación suicida.' } },
-                { texto: '3.3.1 [Subcomponente Suicidio A]', vista: { titulo: '3.3.1 Mapeo de Ideación y Contrato', desc: 'Estrategias de seguridad clínica.' } },
-                { texto: '3.3.2 [Subcomponente Suicidio B]', vista: { titulo: '3.3.2 Intervención Familiar y Postvención', desc: 'Soporte al entorno vincular.' } }
+            nombre: "3. Estrategias especiales I",
+            claseBtn: "btn-b3-p",
+            hijos: [
+                { 
+                    nombre: "3.1 Situaciones de duelo", 
+                    clase: "btn-b3-s",
+                    nietos: [
+                        { nombre: "3.1.1", clase: "btn-b3-t", desc: "Duelo - Subcomponente 1." },
+                        { nombre: "3.1.2", clase: "btn-b3-t", desc: "Duelo - Subcomponente 2." }
+                    ]
+                },
+                { 
+                    nombre: "3.2 Situaciones de crisis", 
+                    clase: "btn-b3-s",
+                    nietos: [
+                        { nombre: "3.2.1", clase: "btn-b3-t", desc: "Crisis - Subcomponente 1." },
+                        { nombre: "3.2.2", clase: "btn-b3-t", desc: "Crisis - Subcomponente 2." }
+                    ]
+                },
+                { 
+                    nombre: "3.3 Situaciones de Suicidio", 
+                    clase: "btn-b3-s",
+                    nietos: [
+                        { nombre: "3.3.1", clase: "btn-b3-t", desc: "Suicidio - Subcomponente 1." },
+                        { nombre: "3.3.2", clase: "btn-b3-t", desc: "Suicidio - Subcomponente 2." }
+                    ]
+                }
             ]
         },
         rubricas: {
-            titulo: "4. Rúbricas de Consultas",
-            botonesFila2: [
-                { texto: '4.1 Escalas de Evaluación Clínica', vista: { titulo: '4.1 Rúbricas y Escalas', desc: 'Instrumentos estandarizados de medición sintomática e intersubjetiva.' } },
-                { texto: '4.2 Indicadores de Convergencia', vista: { titulo: '4.2 Indicadores de Convergencia', desc: 'Parámetros de evolución conjunta psicoanálisis-neurobiología.' } }
+            nombre: "4. Rúbricas de Consultas",
+            claseBtn: "btn-b4-p",
+            hijos: [
+                { nombre: "4.1 Escalas de Evaluación Clínica", clase: "btn-b4-s", desc: "Instrumentos estandarizados de medición." },
+                { nombre: "4.2 Indicadores de Convergencia", clase: "btn-b4-s", desc: "Parámetros de evolución conjunta." }
             ]
         },
         historia: {
-            titulo: "5. Historia Clínica",
-            botonesFila2: [
-                { texto: '5.1 Registro de Sesiones', vista: { titulo: '5.1 Registro de Sesiones', desc: 'Bitácora cronológica e intervenciones registradas por paciente.' } },
-                { texto: '5.2 Evoluciones y Notas Clínicas', vista: { titulo: '5.2 Evoluciones Clínicas', desc: 'Historial de progresos terapéuticos.' } }
+            nombre: "5. Historia Clínica",
+            claseBtn: "btn-b5-p",
+            hijos: [
+                { nombre: "5.1 Registro de Sesiones", clase: "btn-b5-s", desc: "Bitácora cronológica e intervenciones registradas." },
+                { nombre: "5.2 Evoluciones y Notas Clínicas", clase: "btn-b5-s", desc: "Historial de progresos terapéuticos." }
             ]
+        },
+        salir: {
+            nombre: "6. Salir",
+            claseBtn: "btn-b6-p",
+            accion: () => ejecutarSalidaCinematografica()
         }
     };
 
-    function inicializarApp() {
-        // Construir Fila 1 (Botones Principales 1 a 6)
-        fila1.innerHTML = '';
-        
-        const categorias = [
-            { id: 'admin', texto: '1. Administración' },
-            { id: 'estrategias', texto: '2. Estrategias y Técnicas' },
-            { id: 'especiales', texto: '3. Estrategias especiales I' },
-            { id: 'rubricas', texto: '4. Rúbricas de Consultas' },
-            { id: 'historia', texto: '5. Historia Clínica' },
-            { id: 'salir', texto: '6. Salir' }
-        ];
-
-        categorias.forEach(cat => {
-            const btn = document.createElement('button');
-            btn.className = 'btn-menu btn-nivel-1';
-            btn.textContent = cat.texto;
-
-            if (cat.id === 'salir') {
-                btn.className = 'btn-menu btn-salir';
-                btn.addEventListener('click', ejecutarSalida);
-            } else {
-                btn.addEventListener('click', () => {
-                    fila2.innerHTML = '';
-                    fila3.innerHTML = '';
-                    cargarFila2(menuData[cat.id]);
-                });
-            }
-            fila1.appendChild(btn);
+    const btnLoginSubmit = loginForm.querySelector('button[type="submit"]');
+    if (btnLoginSubmit) {
+        btnLoginSubmit.addEventListener('click', (e) => {
+            e.preventDefault();
+            procesarLogin();
         });
-
-        // Cargar por defecto la sección de Administración al iniciar sesión
-        cargarFila2(menuData.admin);
     }
 
-    function cargarFila2(seccionObj) {
-        fila2.innerHTML = '';
-        fila3.innerHTML = '';
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        procesarLogin();
+    });
 
-        if (seccionObj && seccionObj.botonesFila2) {
-            seccionObj.botonesFila2.forEach(item => {
-                const btn = document.createElement('button');
-                btn.className = 'btn-menu btn-nivel-2';
-                btn.textContent = item.texto;
+    function procesarLogin() {
+        const usr = usernameInput.value.trim();
+        const pwd = passwordInput.value.trim();
 
-                btn.addEventListener('click', () => {
-                    fila3.innerHTML = '';
-                    if (item.link) {
-                        cargarArchivoExterno(item.link);
-                    } else if (item.subgrupo) {
-                        cargarFila3(seccionObj.subgrupos[item.subgrupo]);
-                    } else if (item.vista) {
-                        mostrarVista(item.vista.titulo, item.vista.desc);
-                    }
-                });
-
-                fila2.appendChild(btn);
-            });
+        if (usr === "DRPEREYRA" && pwd === "235689") {
+            loginSection.classList.add('hidden');
+            appSection.classList.remove('hidden');
+            inicializarMenu();
+        } else {
+            loginError.textContent = "Credenciales incorrectas. Verifique usuario y contraseña.";
         }
     }
 
-    function cargarFila3(subbotones) {
-        fila3.innerHTML = '';
-        subbotones.forEach(item => {
+    function inicializarMenu() {
+        linea1.innerHTML = '';
+        linea2.innerHTML = '';
+        linea3.innerHTML = '';
+
+        Object.keys(menuData).forEach(key => {
+            const item = menuData[key];
             const btn = document.createElement('button');
-            btn.className = 'btn-menu btn-nivel-3';
-            btn.textContent = item.texto;
+            btn.className = `app-btn ${item.claseBtn}`;
+            btn.textContent = item.nombre;
 
             btn.addEventListener('click', () => {
-                if (item.link) {
-                    cargarArchivoExterno(item.link);
-                } else if (item.vista) {
-                    mostrarVista(item.vista.titulo, item.vista.desc);
+                linea1.querySelectorAll('.app-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                linea2.innerHTML = '';
+                linea3.innerHTML = '';
+
+                if (item.accion) {
+                    item.accion();
+                } else if (item.hijos) {
+                    cargarLinea2(item.hijos);
                 }
             });
 
-            fila3.appendChild(btn);
+            linea1.appendChild(btn);
+        });
+
+        const primerBtn = linea1.querySelector('button');
+        if (primerBtn) primerBtn.click();
+    }
+
+    function cargarLinea2(hijos) {
+        linea2.innerHTML = '';
+        linea3.innerHTML = '';
+
+        hijos.forEach(hijo => {
+            const btn = document.createElement('button');
+            btn.className = `app-btn ${hijo.clase}`;
+            btn.textContent = hijo.nombre;
+
+            btn.addEventListener('click', () => {
+                linea2.querySelectorAll('.app-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                linea3.innerHTML = '';
+
+                if (hijo.link) {
+                    mostrarIframe(hijo.link);
+                } else if (hijo.desc) {
+                    mostrarTexto(hijo.nombre, hijo.desc);
+                }
+
+                if (hijo.nietos) {
+                    cargarLinea3(hijo.nietos);
+                }
+            });
+
+            linea2.appendChild(btn);
         });
     }
 
-    function mostrarVista(titulo, descripcion) {
-        contenidoPrincipal.innerHTML = `
-            <h2>${titulo}</h2>
-            <p>${descripcion}</p>
-            <hr style="border:0; border-top:1px solid #e2e8f0; margin: 20px 0;">
-            <p style="color: #64748b; font-size: 0.9rem;">Estado del módulo sincronizado con Firebase Database.</p>
+    function cargarLinea3(nietos) {
+        linea3.innerHTML = '';
+
+        nietos.forEach(nieto => {
+            const btn = document.createElement('button');
+            btn.className = `app-btn ${nieto.clase}`;
+            btn.textContent = nieto.nombre;
+
+            btn.addEventListener('click', () => {
+                linea3.querySelectorAll('.app-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                if (nieto.link) {
+                    mostrarIframe(nieto.link);
+                } else if (nieto.desc) {
+                    mostrarTexto(nieto.nombre, nieto.desc);
+                }
+            });
+
+            linea3.appendChild(btn);
+        });
+    }
+
+    function mostrarTexto(titulo, desc) {
+        outputDisplay.innerHTML = `<strong>${titulo}</strong><br><span style="color:#d8b4fe;">${desc}</span>`;
+    }
+
+    function mostrarIframe(url) {
+        outputDisplay.innerHTML = `
+            <div style="width: 100%; height: 550px; overflow: hidden; background: transparent;">
+                <iframe src="${url}" style="width: 100%; height: 100%; border: none; background: transparent;" title="Módulo Externo Independiente"></iframe>
+            </div>
         `;
     }
 
-    function cargarArchivoExterno(url) {
-        fetch(url)
-            .then(response => {
-                if (!response.ok) throw new Error('Archivo no encontrado');
-                return response.text();
-            })
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const mainContent = doc.querySelector('main') || doc.body;
-                contenidoPrincipal.innerHTML = mainContent.innerHTML;
-            })
-            .catch(error => {
-                contenidoPrincipal.innerHTML = `
-                    <h2>Módulo: ${url}</h2>
-                    <p>No se encontró el archivo físico <strong>${url}</strong> en el servidor local, pero el enlace de navegación está activo.</p>
-                `;
-            });
-    }
+    function ejecutarSalidaCinematografica() {
+        // Crear overlay cinematográfico dinámico con animación vectorial SVG y efectos lumínicos
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #181028 0%, #0a0612 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            box-sizing: border-box;
+            padding: 20px;
+            text-align: center;
+        `;
 
-    function ejecutarSalida() {
-        despedidaOverlay.style.display = 'flex';
+        overlay.innerHTML = `
+            <style>
+                @keyframes spinPrism {
+                    0% { transform: rotate(0deg) scale(0.95); filter: drop-shadow(0 0 15px rgba(186,85,211,0.6)); }
+                    50% { transform: rotate(180deg) scale(1.05); filter: drop-shadow(0 0 35px rgba(216,180,254,0.9)); }
+                    100% { transform: rotate(360deg) scale(0.95); filter: drop-shadow(0 0 15px rgba(186,85,211,0.6)); }
+                }
+                @keyframes pulseWave {
+                    0% { opacity: 0.3; transform: scale(0.9); }
+                    50% { opacity: 0.8; transform: scale(1.1); }
+                    100% { opacity: 0.3; transform: scale(0.9); }
+                }
+                @keyframes textFadeUp {
+                    0% { opacity: 0; transform: translateY(20px); }
+                    100% { opacity: 1; transform: translateY(0); }
+                }
+                .prism-svg {
+                    width: 120px;
+                    height: 120px;
+                    animation: spinPrism 6s linear infinite;
+                    margin-bottom: 25px;
+                }
+                .cinematic-text {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    color: #f3e8ff;
+                    font-size: 1.5rem;
+                    font-weight: 500;
+                    letter-spacing: 0.05em;
+                    text-shadow: 0 0 20px rgba(186,85,211,0.8);
+                    animation: textFadeUp 1.2s ease forwards;
+                    max-width: 650px;
+                    line-height: 1.4;
+                }
+            </style>
+            <svg class="prism-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="50,10 90,80 10,80" stroke="#d8b4fe" stroke-width="2" stroke-linejoin="round" fill="rgba(186,85,211,0.15)" />
+                <polygon points="50,30 75,70 25,70" stroke="#c084fc" stroke-width="1.5" stroke-linejoin="round" fill="rgba(160,32,240,0.2)" />
+                <circle cx="50" cy="50" r="6" fill="#f3e8ff" style="animation: pulseWave 2s infinite ease-in-out;" />
+                <line x1="50" y1="10" x2="50" y2="50" stroke="#e2b7ff" stroke-width="1" stroke-dasharray="3 3" />
+            </svg>
+            <div class="cinematic-text">Gracias por utilizar Visiones prismáticas Convergencia, hasta la próxima.</div>
+        `;
+
+        document.body.appendChild(overlay);
+        setTimeout(() => { overlay.style.opacity = '1'; }, 50);
+
         setTimeout(() => {
-            location.reload();
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                location.reload();
+            }, 800);
         }, 3500);
     }
 });
