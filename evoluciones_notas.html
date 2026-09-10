@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica de la Convergencia - Evoluciones y Notas Clínicas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --purple-glow: 0 0 12px rgba(186, 85, 211, 0.6), 0 0 24px rgba(160, 32, 240, 0.4);
+            --purple-border: #ba55d3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: rgba(18, 16, 28, 0.92);
+            color: #f1f1f1;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        
+        .card { 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            background: rgba(18, 16, 28, 0.88);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            box-sizing: border-box;
+        }
+
+        h2 { 
+            color: #e2b7ff; 
+            font-size: 1.2rem; 
+            margin-top: 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            border-bottom: 1px solid rgba(186, 85, 211, 0.3); 
+            padding-bottom: 8px; 
+        }
+
+        .form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; margin-bottom: 5px; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+
+        .form-group { display: flex; flex-direction: column; gap: 5px; text-align: left; }
+        label { font-size: 0.85rem; font-weight: 600; color: #d8b4fe; }
+        
+        input, select, textarea { 
+            padding: 10px 12px; 
+            background: rgba(28, 25, 42, 0.8); 
+            border: 1px solid rgba(186, 85, 211, 0.3); 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            color: #fff; 
+            outline: none; 
+            transition: all 0.3s ease; 
+        }
+        
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--purple-border); 
+            box-shadow: var(--purple-glow); 
+        }
+
+        select option { background: #1c192a; color: #fff; }
+        
+        textarea { width: 100%; min-height: 140px; resize: vertical; box-sizing: border-box; }
+
+        .btn { 
+            background: linear-gradient(135deg, #9b59b6, #8e44ad); 
+            color: white; 
+            border: none; 
+            padding: 10px 18px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 6px; 
+            box-shadow: 0 4px 10px rgba(160, 32, 240, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: var(--purple-glow); }
+
+        .evolution-card { background: rgba(28, 25, 42, 0.7); border-left: 4px solid var(--purple-border); padding: 15px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(186, 85, 211, 0.2); }
+        .evolution-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid rgba(186, 85, 211, 0.2); padding-bottom: 6px; }
+    </style>
+
+    <!-- SDKs de Firebase Compat alineados -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+    <main class="container">
+        <div class="card">
+            <h2><i class="fa-solid fa-user-injured"></i> Seleccionar Paciente</h2>
+            <div class="form-group">
+                <label for="evolution-patient">Paciente Activo</label>
+                <select id="evolution-patient" onchange="loadPatientEvolutions()">
+                    <option value="">-- Seleccione un paciente --</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="evolution-form-card" class="card" style="display: none;">
+            <h2><i class="fa-solid fa-notes-medical"></i> Registrar Nota Clínica o Evolución</h2>
+            <form id="evolution-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="evolution-title">Título / Asunto</label>
+                        <input type="text" id="evolution-title" required placeholder="Ej. Nota de evolución interdisciplinaria">
+                    </div>
+                    <div class="form-group">
+                        <label for="evolution-date">Fecha</label>
+                        <input type="date" id="evolution-date" required>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="evolution-nota">Nota Clínica / Evolución</label>
+                    <textarea id="evolution-nota" required placeholder="Describa las observaciones clínicas, cambios evolutivos o notas de seguimiento..."></textarea>
+                </div>
+                <button type="submit" class="btn"><i class="fa-solid fa-floppy-disk"></i> Guardar Nota en la Base de Datos</button>
+            </form>
+        </div>
+
+        <div id="evolutions-history-card" class="card" style="display: none;">
+            <h2><i class="fa-solid fa-timeline"></i> Historial de Evoluciones y Notas Clínicas</h2>
+            <div id="evolutions-container">
+                <p style="color: #b19cd9; font-size: 0.9rem; text-align: center; padding: 15px;">Seleccione un paciente para ver sus notas previas.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let db;
+        let activePatientId = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase === 'undefined') {
+                alert("Error crítico: Firebase no está disponible.");
+                return;
+            }
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyAd5dyriu-Z2Gms1Tq9u8A75LrQKHd0GC8",
+                authDomain: "aplicacion1-c794d.firebaseapp.com",
+                projectId: "aplicacion1-c794d",
+                storageBucket: "aplicacion1-c794d.firebasestorage.app",
+                messagingSenderId: "310699962592",
+                appId: "1:310699962592:web:71794de4268e47b35da085",
+                measurementId: "G-R3QHSGSNQB"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+
+            initPacientes();
+        });
+
+        async function initPacientes() {
+            try {
+                const querySnapshot = await db.collection("pacientes").get();
+                const selectEl = document.getElementById('evolution-patient');
+                selectEl.innerHTML = '<option value="">-- Seleccione un paciente --</option>';
+                querySnapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const opt = document.createElement('option');
+                    opt.value = docSnap.id;
+                    opt.textContent = data.nombre || data.name || `Paciente (${docSnap.id})`;
+                    selectEl.appendChild(opt);
+                });
+            } catch (error) {
+                console.error("Error al cargar pacientes:", error);
+            }
+        }
+
+        window.loadPatientEvolutions = async function() {
+            activePatientId = document.getElementById('evolution-patient').value;
+            const formCard = document.getElementById('evolution-form-card');
+            const historyCard = document.getElementById('evolutions-history-card');
+
+            if (!activePatientId) {
+                formCard.style.display = 'none';
+                historyCard.style.display = 'none';
+                return;
+            }
+
+            formCard.style.display = 'flex';
+            historyCard.style.display = 'flex';
+            document.getElementById('evolution-date').valueAsDate = new Date();
+            renderEvolutions();
+        }
+
+        async function renderEvolutions() {
+            const container = document.getElementById('evolutions-container');
+            container.innerHTML = '<p style="color: #c084fc; font-size: 0.9rem; text-align: center;">Cargando notas evolutivas...</p>';
+
+            try {
+                const patientRef = db.collection("pacientes").doc(activePatientId);
+                const patientSnap = await patientRef.get();
+                
+                if (patientSnap.exists) {
+                    const data = patientSnap.data();
+                    const evoluciones = data.evoluciones || [];
+                    
+                    container.innerHTML = '';
+                    if (evoluciones.length === 0) {
+                        container.innerHTML = '<p style="color: #b19cd9; font-size: 0.9rem; text-align: center; padding: 15px;">No hay notas clínicas registradas para este paciente.</p>';
+                        return;
+                    }
+
+                    evoluciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+                    evoluciones.forEach(ev => {
+                        const div = document.createElement('div');
+                        div.className = 'evolution-card';
+                        div.innerHTML = `
+                            <div class="evolution-header">
+                                <strong style="color: #e2b7ff;"><i class="fa-solid fa-notes-medical"></i> ${ev.titulo}</strong>
+                                <span style="font-size: 0.8rem; color: #d8b4fe;">Fecha: ${ev.fecha}</span>
+                            </div>
+                            <p style="font-size: 0.9rem; color: #e5e5e5; white-space: pre-line;">${ev.nota}</p>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+            } catch (error) {
+                console.error("Error al renderizar evoluciones:", error);
+            }
+        }
+
+        document.getElementById('evolution-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!activePatientId) return;
+
+            const nuevaEvolucion = {
+                id: Date.now().toString(),
+                titulo: document.getElementById('evolution-title').value.trim(),
+                fecha: document.getElementById('evolution-date').value,
+                nota: document.getElementById('evolution-nota').value.trim()
+            };
+
+            try {
+                const patientRef = db.collection("pacientes").doc(activePatientId);
+                const patientSnap = await patientRef.get();
+                let evoluciones = patientSnap.data().evoluciones || [];
+                evoluciones.push(nuevaEvolucion);
+
+                await patientRef.update({ evoluciones: evoluciones });
+                document.getElementById('evolution-title').value = '';
+                document.getElementById('evolution-nota').value = '';
+                alert('¡Nota clínica guardada con éxito en la base de datos!');
+                renderEvolutions();
+            } catch (error) {
+                console.error("Error al guardar evolución:", error);
+                alert("Error al registrar la nota clínica.");
+            }
+        });
+    </script>
+</body>
+</html>
