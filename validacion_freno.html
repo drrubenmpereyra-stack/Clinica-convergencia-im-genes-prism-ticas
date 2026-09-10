@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica de la Convergencia - Validación Empática como Freno de Emergencia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --purple-glow: 0 0 12px rgba(186, 85, 211, 0.6), 0 0 24px rgba(160, 32, 240, 0.4);
+            --purple-border: #ba55d3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: rgba(18, 16, 28, 0.92);
+            color: #f1f1f1;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        
+        .card { 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            background: rgba(18, 16, 28, 0.88);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            box-sizing: border-box;
+        }
+
+        h2 { 
+            color: #e2b7ff; 
+            font-size: 1.2rem; 
+            margin-top: 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            border-bottom: 1px solid rgba(186, 85, 211, 0.3); 
+            padding-bottom: 8px; 
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 5px; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+
+        .form-group { display: flex; flex-direction: column; gap: 5px; text-align: left; }
+        label { font-size: 0.85rem; font-weight: 600; color: #d8b4fe; }
+        
+        input, select, textarea { 
+            padding: 10px 12px; 
+            background: rgba(28, 25, 42, 0.8); 
+            border: 1px solid rgba(186, 85, 211, 0.3); 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            color: #fff; 
+            outline: none; 
+            transition: all 0.3s ease; 
+        }
+        
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--purple-border); 
+            box-shadow: var(--purple-glow); 
+        }
+
+        select option { background: #1c192a; color: #fff; }
+        textarea { width: 100%; min-height: 100px; resize: vertical; box-sizing: border-box; }
+
+        .rubric-criterion-box {
+            background: rgba(28, 25, 42, 0.7);
+            border: 1px solid rgba(186, 85, 211, 0.25);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .rubric-criterion-box h4 {
+            color: #e2b7ff;
+            margin: 0 0 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #e5e5e5;
+        }
+
+        .radio-group label {
+            font-weight: normal;
+            color: #d8b4fe;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .score-preview-box {
+            background: rgba(186, 85, 211, 0.15);
+            border: 1px solid var(--purple-border);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn { 
+            background: linear-gradient(135deg, #9b59b6, #8e44ad); 
+            color: white; 
+            border: none; 
+            padding: 10px 18px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 6px; 
+            box-shadow: 0 4px 10px rgba(160, 32, 240, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: var(--purple-glow); }
+        .btn-secundario { background: linear-gradient(135deg, #2980b9, #2471a3); }
+
+        .eval-card { background: rgba(28, 25, 42, 0.7); border-left: 4px solid var(--purple-border); padding: 15px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(186, 85, 211, 0.2); text-align: left; }
+        .eval-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid rgba(186, 85, 211, 0.2); padding-bottom: 6px; }
+    </style>
+
+    <!-- SDKs de Firebase Compat alineados -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+    <main class="container">
+        <div class="card">
+            <h2><i class="fa-solid fa-user-shield"></i> Selección de Paciente</h2>
+            <div class="form-group">
+                <label for="eval-patient">Paciente Activo</label>
+                <select id="eval-patient" onchange="loadPatientEvaluations()">
+                    <option value="">-- Seleccione un paciente --</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="eval-form-card" class="card" style="display: none;">
+            <h2><i class="fa-solid fa-heart-pulse"></i> Rúbrica: Validación Empática como Freno de Emergencia</h2>
+            <form id="evaluation-form" onsubmit="event.preventDefault();">
+                <div class="form-grid" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label for="eval-date">Fecha de Evaluación</label>
+                        <input type="date" id="eval-date" required>
+                    </div>
+                </div>
+
+                <!-- Criterio 1 -->
+                <div class="rubric-criterion-box">
+                    <h4>Criterio 1: Identificación y Contención del Estado de Inundación</h4>
+                    <div class="radio-group">
+                        <label><input type="radio" name="crit1" value="1" required> <strong>Nivel 1 (1 pt):</strong> Ignora signos de alerta o intenta interpretaciones complejas con cortisol alto.</label>
+                        <label><input type="radio" name="crit1" value="2"> <strong>Nivel 2 (2 pts):</strong> Reconoce parcialmente la tensión pero prioriza el discurso intelectual a veces.</label>
+                        <label><input type="radio" name="crit1" value="3"> <strong>Nivel 3 (3 pts):</strong> Detecta con precisión la inundación y frena de inmediato intervenciones prematuras.</label>
+                    </div>
+                </div>
+
+                <!-- Criterio 2 -->
+                <div class="rubric-criterion-box">
+                    <h4>Criterio 2: Aplicación de la Validación Empática</h4>
+                    <div class="radio-group">
+                        <label><input type="radio" name="crit2" value="1" required> <strong>Nivel 1 (1 pt):</strong> Omite validación genuina y minimiza el malestar con explicaciones abstractas.</label>
+                        <label><input type="radio" name="crit2" value="2"> <strong>Nivel 2 (2 pts):</strong> Ofrece escucha moderada, logrando parcialmente restaurar la calma.</label>
+                        <label><input type="radio" name="crit2" value="3"> <strong>Nivel 3 (3 pts):</strong> Ejecuta la validación como freno de emergencia logrando relajar el cuerpo del paciente.</label>
+                    </div>
+                </div>
+
+                <!-- Criterio 3 -->
+                <div class="rubric-criterion-box">
+                    <h4>Criterio 3: Transición al Procesamiento Reflexivo</h4>
+                    <div class="radio-group">
+                        <label><input type="radio" name="crit3" value="1" required> <strong>Nivel 1 (1 pt):</strong> El paciente permanece atrapado en supervivencia sin activar reflexión.</label>
+                        <label><input type="radio" name="crit3" value="2"> <strong>Nivel 2 (2 pts):</strong> Disminuye parcialmente la hipervigilancia permitiendo aproximación gradual.</label>
+                        <label><input type="radio" name="crit3" value="3"> <strong>Nivel 3 (3 pts):</strong> Facilita con éxito el paso a la reflexión permitiendo que la corteza prefrontal domine.</label>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="eval-observaciones">Observaciones Clínicas / Notas del Terapeuta</label>
+                    <textarea id="eval-observaciones" placeholder="Detalle contextual de la intervención y respuesta al freno de emergencia..."></textarea>
+                </div>
+
+                <div class="score-preview-box" id="score-preview">
+                    <strong>Informe de Valoración:</strong><br>
+                    Puntaje Total: Pendiente<br>
+                    Categoría y Criterio Institucional: Pendiente de valoración
+                </div>
+                <br>
+
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secundario" onclick="valorarRubrica()"><i class="fa-solid fa-calculator"></i> Valorar Rúbrica</button>
+                    <button type="button" class="btn" onclick="generarYGuardarInforme()"><i class="fa-solid fa-floppy-disk"></i> Generar Informe y guardar en BD</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="evaluations-history-card" class="card" style="display: none;">
+            <h2><i class="fa-solid fa-timeline"></i> Historial de Evaluaciones de Validación Empática</h2>
+            <div id="evaluations-container">
+                <p style="color: #b19cd9; font-size: 0.9rem; text-align: center; padding: 15px;">Seleccione un paciente para ver sus evaluaciones previas.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let db;
+        let activePatientId = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase === 'undefined') {
+                alert("Error crítico: Firebase no está disponible.");
+                return;
+            }
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyAd5dyriu-Z2Gms1Tq9u8A75LrQKHd0GC8",
+                authDomain: "aplicacion1-c794d.firebaseapp.com",
+                projectId: "aplicacion1-c794d",
+                storageBucket: "aplicacion1-c794d.firebasestorage.app",
+                messagingSenderId: "310699962592",
+                appId: "1:310699962592:web:71794de4268e47b35da085",
+                measurementId: "G-R3QHSGSNQB"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+
+            initPacientes();
+        });
+
+        async function initPacientes() {
+            try {
+                const querySnapshot = await db.collection("pacientes").get();
+                const selectEl = document.getElementById('eval-patient');
+                selectEl.innerHTML = '<option value="">-- Seleccione un paciente --</option>';
+                querySnapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const opt = document.createElement('option');
+                    opt.value = docSnap.id;
+                    opt.textContent = data.nombre || data.name || `Paciente (${docSnap.id})`;
+                    selectEl.appendChild(opt);
+                });
+            } catch (error) {
+                console.error("Error al cargar pacientes:", error);
+            }
+        }
+
+        window.loadPatientEvaluations = async function() {
+            activePatientId = document.getElementById('eval-patient').value;
+            const formCard = document.getElementById('eval-form-card');
+            const historyCard = document.getElementById('evaluations-history-card');
+
+            if (!activePatientId) {
+                formCard.style.display = 'none';
+                historyCard.style.display = 'none';
+                return;
+            }
+
+            formCard.style.display = 'flex';
+            historyCard.style.display = 'flex';
+            document.getElementById('eval-date').valueAsDate = new Date();
+            renderEvaluations();
+        }
+
+        function calcularDatosRubrica() {
+            const r1 = document.querySelector('input[name="crit1"]:checked');
+            const r2 = document.querySelector('input[name="crit2"]:checked');
+            const r3 = document.querySelector('input[name="crit3"]:checked');
+
+            if (!r1 || !r2 || !r3) {
+                return null;
+            }
+
+            const c1 = parseInt(r1.value);
+            const c2 = parseInt(r2.value);
+            const c3 = parseInt(r3.value);
+            const total = c1 + c2 + c3;
+
+            let categoriaStr = "";
+            let descripcionInforme = "";
+            let color = "";
+
+            if (total >= 8) {
+                categoriaStr = "Categoría A - Óptimo";
+                descripcionInforme = "Dominio excelente de la técnica de validación como freno de emergencia; el terapeuta regula con eficacia el eje HPA y prioriza la homeostasis antes de interpretar.";
+                color = "#2ecc71";
+            } else if (total >= 5) {
+                categoriaStr = "Categoría B - En Proceso";
+                descripcionInforme = "Competencia moderada; comprende la necesidad de regular el estrés, pero ocasionalmente precipita las interpretaciones cognitivas antes de que el paciente logre relajarse.";
+                color = "#f39c12";
+            } else {
+                categoriaStr = "Categoría C - Requiere Supervisión";
+                descripcionInforme = "Dificultad marcada para identificar el desborde neurobiológico del paciente, operando desde un enfoque puramente intelectual que mantiene activo el circuito de cortisol.";
+                color = "#e74c3c";
+            }
+
+            return { c1, c2, c3, total, categoriaStr, descripcionInforme, color };
+        }
+
+        window.valorarRubrica = function() {
+            const resultado = calcularDatosRubrica();
+            const preview = document.getElementById('score-preview');
+
+            if (!resultado) {
+                alert("Por favor seleccione una opción en cada uno de los tres criterios de la rúbrica.");
+                return;
+            }
+
+            preview.innerHTML = `
+                <strong>Informe de Valoración:</strong><br>
+                Puntaje Total: <strong>${resultado.total}/9</strong><br>
+                Categoría: <span style="color: ${resultado.color}; font-weight: bold;">${resultado.categoriaStr}</span><br>
+                <em>Criterio del Informe:</em> ${resultado.descripcionInforme}
+            `;
+        }
+
+        window.generarYGuardarInforme = async function() {
+            if (!activePatientId) {
+                alert("Seleccione un paciente primero.");
+                return;
+            }
+
+            const resultado = calcularDatosRubrica();
+            if (!resultado) {
+                alert("Por favor complete todos los criterios de la rúbrica antes de generar el informe.");
+                return;
+            }
+
+            valorarRubrica();
+
+            const nuevaEvaluacion = {
+                id: Date.now().toString(),
+                fecha: document.getElementById('eval-date').value,
+                crit1: resultado.c1,
+                crit2: resultado.c2,
+                crit3: resultado.c3,
+                puntaje: resultado.total,
+                categoria: resultado.categoriaStr,
+                descripcionInforme: resultado.descripcionInforme,
+                observaciones: document.getElementById('eval-observaciones').value.trim()
+            };
+
+            try {
+                const patientRef = db.collection("pacientes").doc(activePatientId);
+                const patientSnap = await patientRef.get();
+                let evaluaciones = patientSnap.data().evaluaciones_validacion || [];
+                evaluaciones.push(nuevaEvaluacion);
+
+                await patientRef.update({ evaluaciones_validacion: evaluaciones });
+                alert('¡Informe generado y guardado con éxito en la base de datos!');
+                renderEvaluations();
+            } catch (error) {
+                console.error("Error al guardar evaluación:", error);
+                alert("Error al registrar el informe en la base de datos.");
+            }
+        };
+
+        async function renderEvaluations() {
+            const container = document.getElementById('evaluations-container');
+            container.innerHTML = '<p style="color: #c084fc; font-size: 0.9rem; text-align: center;">Cargando evaluaciones...</p>';
+
+            try {
+                const patientRef = db.collection("pacientes").doc(activePatientId);
+                const patientSnap = await patientRef.get();
+                
+                if (patientSnap.exists) {
+                    const data = patientSnap.data();
+                    const evaluaciones = data.evaluaciones_validacion || [];
+                    
+                    container.innerHTML = '';
+                    if (evaluaciones.length === 0) {
+                        container.innerHTML = '<p style="color: #b19cd9; font-size: 0.9rem; text-align: center; padding: 15px;">No hay evaluaciones de validación empática registradas.</p>';
+                        return;
+                    }
+
+                    evaluaciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+                    evaluaciones.forEach(ev => {
+                        let colorCat = "#2ecc71";
+                        if (ev.puntaje < 8 && ev.puntaje >= 5) colorCat = "#f39c12";
+                        if (ev.puntaje < 5) colorCat = "#e74c3c";
+
+                        const div = document.createElement('div');
+                        div.className = 'eval-card';
+                        div.innerHTML = `
+                            <div class="eval-header">
+                                <strong style="color: #e2b7ff;"><i class="fa-solid fa-heart-pulse"></i> Evaluación - Puntaje: ${ev.puntaje}/9</strong>
+                                <span style="font-size: 0.8rem; color: #d8b4fe;">Fecha: ${ev.fecha}</span>
+                            </div>
+                            <p style="font-size: 0.85rem; margin-bottom: 5px;"><strong>Categoría:</strong> <span style="color: ${colorCat}; font-weight: bold;">${ev.categoria}</span></p>
+                            <p style="font-size: 0.85rem; margin-bottom: 5px;"><strong>Descripción del Informe:</strong> ${ev.descripcionInforme || ''}</p>
+                            <p style="font-size: 0.9rem; color: #e5e5e5; white-space: pre-line;"><strong>Notas:</strong> ${ev.observaciones}</p>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+            } catch (error) {
+                console.error("Error al renderizar evaluaciones:", error);
+            }
+        }
+    </script>
+</body>
+</html>
