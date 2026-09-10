@@ -40,8 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
             claseBtn: "btn-b1-p",
             hijos: [
                 { nombre: "1.1 Pacientes", link: "pacientes.html", clase: "btn-b1-s" },
-                { nombre: "1.2 Contabilidad", clase: "btn-b1-s", desc: "Módulo de gestión contable, honorarios y balance institucional." },
-                { nombre: "1.3 Central formularios", clase: "btn-b1-s", desc: "Repositorio unificado de fichas clínicas y escalas estandarizadas." }
+                { nombre: "1.2 Contabilidad", link: "contabilidad.html", clase: "btn-b1-s", desc: "Módulo de gestión contable, honorarios y balance institucional." },
+                { nombre: "1.3 Agenda", link: "agenda.html", clase: "btn-b1-s", desc: "Módulo de gestión agenda.Turnos, horarios." },
+                { nombre: "1.4 Central formularios", clase: "btn-b1-s", desc: "Repositorio unificado de fichas clínicas y escalas estandarizadas." }
             ]
         },
         estrategias: {
