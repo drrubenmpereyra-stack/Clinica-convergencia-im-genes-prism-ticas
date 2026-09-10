@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica de la Convergencia - Índice de Viabilidad Pragmática y Red de Sostén</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --purple-glow: 0 0 12px rgba(186, 85, 211, 0.6), 0 0 24px rgba(160, 32, 240, 0.4);
+            --purple-border: #ba55d3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: rgba(18, 16, 28, 0.92);
+            color: #f1f1f1;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        
+        .card { 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            background: rgba(18, 16, 28, 0.88);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            box-sizing: border-box;
+        }
+
+        h2 { 
+            color: #e2b7ff; 
+            font-size: 1.2rem; 
+            margin-top: 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            border-bottom: 1px solid rgba(186, 85, 211, 0.3); 
+            padding-bottom: 8px; 
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 5px; }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+
+        .form-group { display: flex; flex-direction: column; gap: 5px; text-align: left; }
+        label { font-size: 0.85rem; font-weight: 600; color: #d8b4fe; }
+        
+        input, select, textarea { 
+            padding: 10px 12px; 
+            background: rgba(28, 25, 42, 0.8); 
+            border: 1px solid rgba(186, 85, 211, 0.3); 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            color: #fff; 
+            outline: none; 
+            transition: all 0.3s ease; 
+        }
+        
+        input:focus, select:focus, textarea:focus { 
+            border-color: var(--purple-border); 
+            box-shadow: var(--purple-glow); 
+        }
+
+        select option { background: #1c192a; color: #fff; }
+        textarea { width: 100%; min-height: 100px; resize: vertical; box-sizing: border-box; }
+
+        .rubric-criterion-box {
+            background: rgba(28, 25, 42, 0.7);
+            border: 1px solid rgba(186, 85, 211, 0.25);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        .rubric-criterion-box h4 {
+            color: #e2b7ff;
+            margin: 0 0 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #e5e5e5;
+        }
+
+        .radio-group label {
+            font-weight: normal;
+            color: #d8b4fe;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .score-preview-box {
+            background: rgba(186, 85, 211, 0.15);
+            border: 1px solid var(--purple-border);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Consola de Luces / Semáforo NO vectorial */
+        .semaforo-container {
+            display: none;
+            background: rgba(15, 12, 22, 0.95);
+            border: 2px solid var(--purple-border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+
+        .semaforo-title {
+            color: #e2b7ff;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .semaforo-lights-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .luz-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .luz-label {
+            font-size: 0.75rem;
+            color: #d8b4fe;
+        }
+
+        .luz-bulbo {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #2a2438;
+            border: 2px solid #4a3b60;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+            transition: all 0.4s ease;
+        }
+
+        .luz-bulbo.rojo-activo {
+            background: #ff4d4d;
+            border-color: #ff9999;
+            box-shadow: 0 0 15px #ff4d4d, 0 0 25px #ff1a1a, inset 0 2px 4px rgba(255,255,255,0.6);
+        }
+
+        .luz-bulbo.amarillo-activo {
+            background: #f1c40f;
+            border-color: #fcf3cf;
+            box-shadow: 0 0 15px #f1c40f, 0 0 25px #d4ac0d, inset 0 2px 4px rgba(255,255,255,0.6);
+        }
+
+        .luz-bulbo.verde-activo {
+            background: #2ecc71;
+            border-color: #a9dfbf;
+            box-shadow: 0 0 15px #2ecc71, 0 0 25px #27ae60, inset 0 2px 4px rgba(255,255,255,0.6);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn { 
+            background: linear-gradient(135deg, #9b59b6, #8e44ad); 
+            color: white; 
+            border: none; 
+            padding: 10px 18px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 6px; 
+            box-shadow: 0 4px 10px rgba(160, 32, 240, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: var(--purple-glow); }
+        .btn-secundario { background: linear-gradient(135deg, #2980b9, #2471a3); }
+        .btn-terciario { background: linear-gradient(135deg, #16a085, #117a65); }
+
+        .eval-card { background: rgba(28, 25, 42, 0.7); border-left: 4px solid var(--purple-border); padding: 15px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(186, 85, 211, 0.2); text-align: left; }
+        .eval-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid rgba(186, 85, 211, 0.2); padding-bottom: 6px; }
+    </style>
+
+    <!-- SDKs de Firebase Compat alineados -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+    <main class="container">
+        <div class="card">
+            <h2><i class="fa-solid fa-user-shield"></i> Selección de Paciente</h2>
+            <div class="form-group">
+                <label for="eval-patient">Paciente Activo</label>
+                <select id="eval-patient" onchange="loadPatientEvaluations()">
+                    <option value="">-- Seleccione un paciente --</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="eval-form-card" class="card" style="display: none;">
+            <h2><i class="fa-solid fa-network-wired"></i> Índice de Viabilidad Pragmática y Red de Sostén</h2>
+            <form id="evaluation-form" onsubmit="event.preventDefault();">
+                <div class="form-grid" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label for="eval-date">Fecha de Evaluación</label>
+                        <input type="date" id="eval-date" required>
+                    </div>
+                </div>
+
+                <!-- Criterio 1 -->
+                <div class="rubric-criterion-box">
+                    <h4>Criterio 1: Recursos Materiales y Gestión Operativa</h4>
+                    <div class="radio-group">
+                        <label><input type="radio" name="crit1" value="1" required> <strong>Nivel 1 (Rojo - 1 pt):</strong> Ausencia de recursos económicos o temporales autogestionados y rigidez cognitiva severa ante la resolución de problemas cotidianos.</label>
+                        <label><input type="radio" name="crit1" value="2"> <strong>Nivel 2 (Amarillo - 2 pts):</strong> El paciente posee capacidades y deseos, pero fragmentados; muestra dificultades para estructurar una agenda de acción autónoma.</label>
+                        <label><input type="radio" name="crit1" value="3"> <strong>Nivel 3 (Verde - 3 pts):</strong> Flexibilidad neurocognitiva conservada, alta autoeficacia percibida y capacidad de autorregulación emocional frente a la frustración.</label>
+                    </div>
+                </div>
+
+                <!-- Criterio 2 -->
+                <div class="rubric-criterion-box">
+                    <h4>Criterio 2: Entorno y Red Vincular de Sostén</h4>
+                    <div class="radio-group">
+                        <label><input type="radio" name="crit2" value="1" required> <strong>Nivel 1 (Rojo - 1 pt):</strong> Entorno vincular boicoteador o dependiente.</label>
+                        <label><input type="radio" name="crit2" value="2"> <strong>Nivel 2 (Amarillo - 2 pts):</strong> Cuenta con apoyos vinculares tibios o condicionados.</label>
+                        <label><input type="radio" name="crit2" value="3"> <strong>Nivel 3 (Verde - 3 pts):</strong> Entorno social y familiar facilitador.</label>
+                    </div>
+                </div>
+
+                <!-- Criterio 3 -->
+                <div class="rubric-criterion-box">
+                    <h4>Criterio 3: Anclaje y Viabilidad Pragmática del Proyecto</h4>
+                    <div class="radio-group">
+                        <label><input type="radio" name="crit3" value="1" required> <strong>Nivel 1 (Rojo - 1 pt):</strong> Fragilidad operativa y aislamiento; todo plan fracasará si no se interviene primero sobre la red vincular y el entrenamiento básico.</label>
+                        <label><input type="radio" name="crit3" value="2"> <strong>Nivel 2 (Amarillo - 2 pts):</strong> Recursos latentes con necesidad de andamiaje transicional por parte del terapeuta.</label>
+                        <label><input type="radio" name="crit3" value="3"> <strong>Nivel 3 (Verde - 3 pts):</strong> Autonomía operativa y ecosistema favorable; implementación fluida requiriendo rol de supervisión estratégica.</label>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="eval-observaciones">Observaciones Clínicas / Notas del Terapeuta</label>
+                    <textarea id="eval-observaciones" placeholder="Detalle contextual de los recursos y la red de sostén..."></textarea>
+                </div>
+
+                <div class="score-preview-box" id="score-preview">
+                    <strong>Informe de Valoración:</strong><br>
+                    Puntaje Total: Pendiente<br>
+                    Categoría y Detalle Teórico: Pendiente de valoración
+                </div>
+
+                <!-- Consola de Luces / Semáforo NO vectorial -->
+                <div id="semaforo-box" class="semaforo-container">
+                    <div class="semaforo-title"><i class="fa-solid fa-gauge-high"></i> Consola de Indicadores (Semáforo)</div>
+                    <div class="semaforo-lights-row">
+                        <div class="luz-item">
+                            <span class="luz-label">Criterio 1</span>
+                            <div id="bulbo-c1" class="luz-bulbo"></div>
+                        </div>
+                        <div class="luz-item">
+                            <span class="luz-label">Criterio 2</span>
+                            <div id="bulbo-c2" class="luz-bulbo"></div>
+                        </div>
+                        <div class="luz-item">
+                            <span class="luz-label">Criterio 3</span>
+                            <div id="bulbo-c3" class="luz-bulbo"></div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secundario" onclick="valorarRubrica()"><i class="fa-solid fa-calculator"></i> Valorar Rúbrica</button>
+                    <button type="button" class="btn btn-terciario" onclick="obtenerGraficoSemaforo()"><i class="fa-solid fa-lightbulb"></i> Obtener Gráfico</button>
+                    <button type="button" class="btn" onclick="generarYGuardarInforme()"><i class="fa-solid fa-floppy-disk"></i> Generar Informe y guardar en BD</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="evaluations-history-card" class="card" style="display: none;">
+            <h2><i class="fa-solid fa-timeline"></i> Historial de Evaluaciones de Viabilidad Pragmática</h2>
+            <div id="evaluations-container">
+                <p style="color: #b19cd9; font-size: 0.9rem; text-align: center; padding: 15px;">Seleccione un paciente para ver sus evaluaciones previas.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let db;
+        let activePatientId = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase === 'undefined') {
+                alert("Error crítico: Firebase no está disponible.");
+                return;
+            }
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyAd5dyriu-Z2Gms1Tq9u8A75LrQKHd0GC8",
+                authDomain: "aplicacion1-c794d.firebaseapp.com",
+                projectId: "aplicacion1-c794d",
+                storageBucket: "aplicacion1-c794d.firebasestorage.app",
+                messagingSenderId: "310699962592",
+                appId: "1:310699962592:web:71794de4268e47b35da085",
+                measurementId: "G-R3QHSGSNQB"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+
+            initPacientes();
+        });
+
+        async function initPacientes() {
+            try {
+                const querySnapshot = await db.collection("pacientes").get();
+                const selectEl = document.getElementById('eval-patient');
+                selectEl.innerHTML = '<option value="">-- Seleccione un paciente --</option>';
+                querySnapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const opt = document.createElement('option');
+                    opt.value = docSnap.id;
+                    opt.textContent = data.nombre || data.name || `Paciente (${docSnap.id})`;
+                    selectEl.appendChild(opt);
+                });
+            } catch (error) {
+                console.error("Error al cargar pacientes:", error);
+            }
+        }
+
+        window.loadPatientEvaluations = async function() {
+            activePatientId = document.getElementById('eval-patient').value;
+            const formCard = document.getElementById('eval-form-card');
+            const historyCard = document.getElementById('evaluations-history-card');
+
+            if (!activePatientId) {
+                formCard.style.display = 'none';
+                historyCard.style.display = 'none';
+                return;
+            }
+
+            formCard.style.display = 'flex';
+            historyCard.style.display = 'flex';
+            document.getElementById('eval-date').valueAsDate = new Date();
+            renderEvaluations();
+        }
+
+        function calcularDatosRubrica() {
+            const r1 = document.querySelector('input[name="crit1"]:checked');
+            const r2 = document.querySelector('input[name="crit2"]:checked');
+            const r3 = document.querySelector('input[name="crit3"]:checked');
+
+            if (!r1 || !r2 || !r3) {
+                return null;
+            }
+
+            const c1 = parseInt(r1.value);
+            const c2 = parseInt(r2.value);
+            const c3 = parseInt(r3.value);
+            const total = c1 + c2 + c3;
+
+            let categoriaStr = "";
+            let indicadoresClinicos = "";
+            let implicanciaProyecto = "";
+            let color = "";
+
+            if (total >= 8) {
+                categoriaStr = "Nivel 3: Autonomía Operativa y Ecosistema Favorable (8 a 9 puntos)";
+                indicadoresClinicos = "Entorno social y familiar facilitador, flexibilidad neurocognitiva conservada, alta autoeficacia percibida y capacidad de autorregulación emocional frente a la frustración.";
+                implicanciaProyecto = "Implicancia para el proyecto: El proyecto se implementa de manera fluida, requiriendo del espacio clínico únicamente un rol de supervisión estratégica y celebración de logros.";
+                color = "#2ecc71";
+            } else if (total >= 5) {
+                categoriaStr = "Nivel 2: Recursos Latentes con Necesidad de Andamiaje (5 a 7 puntos)";
+                indicadoresClinicos = "El paciente posee capacidades y deseos, pero fragmentados. Cuenta con apoyos vinculares tibios o condicionados y muestra dificultades para estructurar una agenda de acción autónoma.";
+                implicanciaProyecto = "Implicancia para el proyecto: El terapeuta funciona como un andamiaje transicional, co-diseñando estructuras temporales, calendarios de acción y estrategias de negociación de límites con su entorno.";
+                color = "#f39c12";
+            } else {
+                categoriaStr = "Nivel 1: Fragilidad Operativa y Aislamiento (3 a 4 puntos)";
+                indicadoresClinicos = "Ausencia de recursos económicos o temporales autogestionados, entorno vincular boicoteador o dependiente, y rigidez cognitiva severa ante la resolución de problemas cotidianos.";
+                implicanciaProyecto = "Implicancia para el proyecto: Todo plan fracasará si no se interviene primero sobre la red vincular y el entrenamiento en flexibilidad cognitiva y autogestión básica.";
+                color = "#e74c3c";
+            }
+
+            return { c1, c2, c3, total, categoriaStr, indicadoresClinicos, implicanciaProyecto, color };
+        }
+
+        window.valorarRubrica = function() {
+            const resultado = calcularDatosRubrica();
+            const preview = document.getElementById('score-preview');
+
+            if (!resultado) {
+                alert("Por favor seleccione una opción en cada uno de los tres criterios de la rúbrica.");
+                return;
+            }
+
+            preview.innerHTML = `
+                <strong>Informe de Valoración Detallado:</strong><br><br>
+                Puntaje Total: <strong>${resultado.total}/9</strong><br>
+                <strong>Categoría Asignada:</strong> <span style="color: ${resultado.color}; font-weight: bold;">${resultado.categoriaStr}</span><br><br>
+                <strong>Indicadores Clínicos del Nivel:</strong><br>
+                ${resultado.indicadoresClinicos}<br><br>
+                <strong>Implicancia para el Proyecto:</strong><br>
+                <em>${resultado.implicanciaProyecto}</em>
+            `;
+        }
+
+        window.obtenerGraficoSemaforo = function() {
+            const r1 = document.querySelector('input[name="crit1"]:checked');
+            const r2 = document.querySelector('input[name="crit2"]:checked');
+            const r3 = document.querySelector('input[name="crit3"]:checked');
+
+            if (!r1 || !r2 || !r3) {
+                alert("Por favor complete todos los criterios de la rúbrica antes de generar el gráfico de semáforo.");
+                return;
+            }
+
+            const b1 = document.getElementById('bulbo-c1');
+            const b2 = document.getElementById('bulbo-c2');
+            const b3 = document.getElementById('bulbo-c3');
+
+            b1.className = "luz-bulbo";
+            b2.className = "luz-bulbo";
+            b3.className = "luz-bulbo";
+
+            const asignarLuz = (bulbo, val) => {
+                if (val === "1") bulbo.classList.add("rojo-activo");
+                else if (val === "2") bulbo.classList.add("amarillo-activo");
+                else if (val === "3") bulbo.classList.add("verde-activo");
+            };
+
+            asignarLuz(b1, r1.value);
+            asignarLuz(b2, r2.value);
+            asignarLuz(b3, r3.value);
+
+            document.getElementById('semaforo-box').style.display = 'block';
+        }
+
+        window.generarYGuardarInforme = async function() {
+            if (!activePatientId) {
+                alert("Seleccione un paciente primero.");
+                return;
+            }
+
+            const resultado = calcularDatosRubrica();
+            if (!resultado) {
+                alert("Por favor complete todos los criterios de la rúbrica antes de generar el informe.");
+                return;
+            }
+
+            valorarRubrica();
+            obtenerGraficoSemaforo();
+
+            const nuevaEvaluacion = {
+                id: Date.now().toString(),
+                fecha: document.getElementById('eval-date').value,
+                crit1: resultado.c1,
+                crit2: resultado.c2,
+                crit3: resultado.c3,
+                puntaje: resultado.total,
+                categoria: resultado.categoriaStr,
+                indicadoresClinicos: resultado.indicadoresClinicos,
+                implicanciaProyecto: resultado.implicanciaProyecto,
+                observaciones: document.getElementById('eval-observaciones').value.trim()
+            };
+
+            try {
+                const patientRef = db.collection("pacientes").doc(activePatientId);
+                const patientSnap = await patientRef.get();
+                let evaluaciones = patientSnap.data().evaluaciones_viabilidad_pragmatica || [];
+                evaluaciones.push(nuevaEvaluacion);
+
+                await patientRef.update({ evaluaciones_viabilidad_pragmatica: evaluaciones });
+                alert('¡Informe completo y gráfico grabados con éxito en la base de datos!');
+                renderEvaluations();
+            } catch (error) {
+                console.error("Error al guardar evaluación:", error);
+                alert("Error al registrar el informe en la base de datos.");
+            }
+        };
+
+        async function renderEvaluations() {
+            const container = document.getElementById('evaluations-container');
+            container.innerHTML = '<p style="color: #c084fc; font-size: 0.9rem; text-align: center;">Cargando evaluaciones...</p>';
+
+            try {
+                const patientRef = db.collection("pacientes").doc(activePatientId);
+                const patientSnap = await patientRef.get();
+                
+                if (patientSnap.exists) {
+                    const data = patientSnap.data();
+                    const evaluaciones = data.evaluaciones_viabilidad_pragmatica || [];
+                    
+                    container.innerHTML = '';
+                    if (evaluaciones.length === 0) {
+                        container.innerHTML = '<p style="color: #b19cd9; font-size: 0.9rem; text-align: center; padding: 15px;">No hay evaluaciones registradas en esta matriz.</p>';
+                        return;
+                    }
+
+                    evaluaciones.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+                    evaluaciones.forEach(ev => {
+                        let colorCat = "#2ecc71";
+                        if (ev.puntaje < 8 && ev.puntaje >= 5) colorCat = "#f39c12";
+                        if (ev.puntaje < 5) colorCat = "#e74c3c";
+
+                        const miniBulbo = (val) => {
+                            if (val === 1) return 'background: #ff4d4d; box-shadow: 0 0 8px #ff4d4d;';
+                            if (val === 2) return 'background: #f1c40f; box-shadow: 0 0 8px #f1c40f;';
+                            return 'background: #2ecc71; box-shadow: 0 0 8px #2ecc71;';
+                        };
+
+                        const div = document.createElement('div');
+                        div.className = 'eval-card';
+                        div.innerHTML = `
+                            <div class="eval-header">
+                                <strong style="color: #e2b7ff;"><i class="fa-solid fa-network-wired"></i> Evaluación - Puntaje: ${ev.puntaje}/9</strong>
+                                <span style="font-size: 0.8rem; color: #d8b4fe;">Fecha: ${ev.fecha}</span>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+                                <span style="font-size: 0.85rem;">Indicadores (C1, C2, C3):</span>
+                                <div style="width: 16px; height: 16px; border-radius: 50%; display: inline-block; ${miniBulbo(ev.crit1)}"></div>
+                                <div style="width: 16px; height: 16px; border-radius: 50%; display: inline-block; ${miniBulbo(ev.crit2)}"></div>
+                                <div style="width: 16px; height: 16px; border-radius: 50%; display: inline-block; ${miniBulbo(ev.crit3)}"></div>
+                            </div>
+                            <p style="font-size: 0.85rem; margin-bottom: 5px;"><strong>Categoría:</strong> <span style="color: ${colorCat}; font-weight: bold;">${ev.categoria}</span></p>
+                            <p style="font-size: 0.85rem; margin-bottom: 5px;"><strong>Indicadores Clínicos:</strong> ${ev.indicadoresClinicos || ''}</p>
+                            <p style="font-size: 0.85rem; margin-bottom: 5px;"><strong>Implicancia para el Proyecto:</strong> ${ev.implicanciaProyecto || ''}</p>
+                            <p style="font-size: 0.9rem; color: #e5e5e5; white-space: pre-line;"><strong>Notas:</strong> ${ev.observaciones}</p>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+            } catch (error) {
+                console.error("Error al renderizar evaluaciones:", error);
+            }
+        }
+    </script>
+</body>
+</html>
