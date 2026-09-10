@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             claseBtn: "btn-b5-p",
             hijos: [
                 { nombre: "5.1 Registro de Sesiones", link: "registro_sesiones", clase: "btn-b5-s", desc: "Bitácora cronológica e intervenciones registradas." },
-                { nombre: "5.2 Evoluciones y Notas Clínicas", clase: "btn-b5-s", desc: "Historial de progresos terapéuticos." }
+                { nombre: "5.2 Evoluciones y Notas Clínicas",link: "evoluciones_notas", clase: "btn-b5-s", desc: "Historial de progresos terapéuticos." }
             ]
         },
         salir: {
