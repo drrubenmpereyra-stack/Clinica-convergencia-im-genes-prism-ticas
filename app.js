@@ -179,6 +179,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 { nombre: "5.2 Evoluciones y Notas Clínicas",link: "evoluciones_notas", clase: "btn-b5-s", desc: "Historial de progresos terapéuticos." }
             ]
         },
+        Proyecto: {
+            nombre: "6. Proyecto de Vida",
+            claseBtn: "btn-b6-p",
+            hijos: [
+                { nombre: "6.1 Autorrealizacion", link: "autorrealizacion.html", clase: "btn-b6-s", desc: "Rúbrica y grafico autorrealización." },
+                { nombre: "6.2 Mapa de autenticidad",link: "mapa_autenticidad.html", clase: "btn-b6-s", desc: "Rúbrica y grafico de autenticidad." },
+                { nombre: "6.3 Urgencia y Sentido",link: "urgencia_sentido.html", clase: "btn-b6-s", desc: "Rúbrica y grafico de urgencia y sentido." },
+                { nombre: "6.4 Viabilidad y sostén",link: "viabilidad_sosten.html", clase: "btn-b6-s", desc: "Rúbrica y grafico de viabilidad y sostén." },
+                { nombre: "6.5 Validación y freno",link: "validacion_freno.html", clase: "btn-b6-s", desc: "Rúbrica y gráfico de validación y freno." },
+                { nombre: "6.6 Gráfico de integración",link: "grafico_integracion.html", clase: "btn-b6-s", desc: "Grafico de integración del proyeco de vida." }
+            ]
+        },
         salir: {
             nombre: "6. Salir",
             claseBtn: "btn-b6-p",
