@@ -3,38 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clínica de la Convergencia - Aquí y Ahora (HPA)</title>
+    <title>Clínica de la Convergencia - Rúbrica 1</title>
     <style>
         :root {
             --purple-glow: 0 0 12px rgba(186, 85, 211, 0.6), 0 0 24px rgba(160, 32, 240, 0.4);
             --purple-border: #ba55d3;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: rgba(18, 16, 28, 0.92);
-            color: #f1f1f1;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .admin-container {
+        .rubric-container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             width: 100%;
-            background: rgba(18, 16, 28, 0.88);
-            backdrop-filter: blur(12px);
-            padding: 25px;
+            background: rgba(18, 16, 28, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 20px;
             border-radius: 14px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(186, 85, 211, 0.3);
+            border: 1px solid rgba(186, 85, 211, 0.25);
             box-sizing: border-box;
             margin-bottom: 15px;
         }
 
-        .admin-title {
+        .rubric-title {
             color: #e2b7ff;
             font-size: 1.2rem;
             margin-top: 0;
@@ -42,128 +33,387 @@
             padding-bottom: 8px;
         }
 
-        .form-grid {
+        .patient-select-box {
+            background: rgba(28, 25, 42, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            margin-bottom: 15px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
         }
 
         @media (max-width: 650px) {
-            .form-grid {
+            .patient-select-box {
                 grid-template-columns: 1fr;
             }
         }
 
-        .form-group-pac {
+        .form-group-p {
             text-align: left;
         }
 
-        .form-group-pac label {
+        .form-group-p label {
             display: block;
             font-size: 0.85rem;
             color: #d8b4fe;
             margin-bottom: 5px;
         }
 
-        .form-group-pac select, .form-group-pac textarea, .form-group-pac input {
+        .form-group-p select, .form-group-p input {
             width: 100%;
-            padding: 10px 12px;
-            background: rgba(28, 25, 42, 0.8);
+            padding: 9px 12px;
+            background: rgba(18, 16, 28, 0.9);
             border: 1px solid rgba(186, 85, 211, 0.3);
             border-radius: 8px;
             color: #fff;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             box-sizing: border-box;
             outline: none;
-            transition: all 0.3s ease;
         }
 
-        .form-group-pac select option {
-            background: #1c192a;
-            color: #fff;
-        }
-
-        .form-group-pac select:focus, .form-group-pac textarea:focus, .form-group-pac input:focus {
+        .form-group-p select:focus, .form-group-p input:focus {
             border-color: var(--purple-border);
             box-shadow: var(--purple-glow);
         }
 
-        .btn-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
+        .indicator-box {
+            background: rgba(28, 25, 42, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(186, 85, 211, 0.2);
         }
 
-        .action-btn-pac {
-            padding: 10px 18px;
+        .indicator-box h4 {
+            color: #e2b7ff;
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            border-bottom: 1px dashed rgba(186, 85, 211, 0.2);
+            padding-bottom: 5px;
+        }
+
+        .station-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: #e5e5e5;
+            background: rgba(18, 16, 28, 0.6);
+            padding: 8px 10px;
+            border-radius: 6px;
+            border-left: 3px solid #9b59b6;
+        }
+
+        .station-item input[type="radio"] {
+            margin-top: 3px;
+            accent-color: #9b59b6;
+            cursor: pointer;
+        }
+
+        .station-item span {
+            color: #d8b4fe;
+            font-weight: bold;
+        }
+
+        .evaluation-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .score-label {
+            font-family: monospace;
+            background: rgba(18, 16, 28, 0.9);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--purple-border);
+            color: #e2b7ff;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .action-btn {
+            padding: 11px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: #fff;
             border: none;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            color: #fff;
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            box-shadow: 0 4px 10px rgba(160, 32, 240, 0.4);
         }
 
-        .action-btn-pac:hover {
+        .action-btn:hover {
             transform: translateY(-2px);
             box-shadow: var(--purple-glow);
         }
 
-        .msg-estado {
-            font-size: 0.85rem;
-            margin-top: 8px;
-            color: #38bdf8;
+        .mapping-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+            background: rgba(28, 25, 42, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            margin-top: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .mapping-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mapping-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid rgba(186, 85, 211, 0.4);
+            box-shadow: 0 0 15px rgba(160, 32, 240, 0.3);
+            background: #000;
+        }
+
+        .mapping-container img {
+            width: 100%;
+            display: block;
+        }
+
+        .overlay-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: screen;
+            filter: contrast(180%) brightness(1.1);
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .overlay-layer.visible {
+            opacity: 1;
+        }
+
+        .layer-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .layer-controls h4 {
+            color: #e2b7ff;
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+            border-bottom: 1px solid rgba(186, 85, 211, 0.2);
+            padding-bottom: 5px;
+        }
+
+        .layer-checkbox-item {
+            display: flex;
+            flex-direction: column;
+            background: rgba(18, 16, 28, 0.8);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(186, 85, 211, 0.2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .layer-checkbox-item:hover {
+            border-color: var(--purple-border);
+            box-shadow: 0 0 8px rgba(186, 85, 211, 0.4);
+        }
+
+        .layer-checkbox-item label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #d8b4fe;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .layer-checkbox-item input[type="checkbox"] {
+            accent-color: #9b59b6;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .layer-hint {
+            font-size: 0.78rem;
+            color: #b19cd9;
+            margin-top: 3px;
+            margin-left: 26px;
+        }
+
+        .output-display {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: rgba(18, 16, 28, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            border: 1px solid rgba(186, 85, 211, 0.25);
+            width: 100%;
+            box-sizing: border-box;
+            font-family: monospace;
+            color: #d8b4fe;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            white-space: pre-wrap;
         }
     </style>
-
     <!-- SDKs de Firebase Compat alineados -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-    <div class="view-section-ahora" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
-        <div class="admin-container">
-            <h3 class="admin-title">Cartografía de la Intersubjetividad: Aquí y Ahora - Eje HPA</h3>
-            <form id="hpa-form">
-                <div class="form-grid">
-                    <div class="form-group-pac" style="grid-column: span 2;">
-                        <label for="select-paciente">Seleccionar Paciente</label>
-                        <select id="select-paciente" required>
-                            <option value="">Cargando pacientes desde la base de datos...</option>
-                        </select>
-                    </div>
-                    <div class="form-group-pac">
-                        <label for="sincronia">Nivel de Sincronía Vincular (1-10)</label>
-                        <input type="number" id="sincronia" min="1" max="10" required placeholder="Ej. 7">
-                    </div>
-                    <div class="form-group-pac">
-                        <label for="marcador-somatico">Marcador Somático del Analista</label>
-                        <input type="text" id="marcador-somatico" required placeholder="Ej. Constricción torácica leve">
-                    </div>
-                    <div class="form-group-pac" style="grid-column: span 2;">
-                        <label for="notas-hpa">Observaciones Clínicas del Eje HPA y Discurso</label>
-                        <textarea id="notas-hpa" rows="4" placeholder="Registro de la modulación autonómica y resonancia afectiva en sesión..."></textarea>
-                    </div>
+    <div class="rubric-container">
+        <h3 class="rubric-title">Evaluación Rúbrica 1: Enfoque en el "Aquí y Ahora" y Eje HPA</h3>
+        
+        <div class="patient-select-box">
+            <div class="form-group-p">
+                <label for="select-paciente">Seleccionar Paciente (Búsqueda en Base de Datos)</label>
+                <select id="select-paciente" required>
+                    <option value="">-- Cargando pacientes registrados... --</option>
+                </select>
+            </div>
+            <div class="form-group-p">
+                <label for="fecha-sesion">Fecha de Sesión</label>
+                <input type="date" id="fecha-sesion" required>
+            </div>
+        </div>
+
+        <!-- Indicador A: Escala de 3 Estaciones -->
+        <div class="indicator-box">
+            <h4>Indicador A: Registro Clínico de Marcadores Somáticos, Autonómicos y Paralingüísticos</h4>
+            
+            <label class="station-item">
+                <input type="radio" name="indA" value="1" required>
+                <div><span>Estación 1 (1 Punto):</span> Omite o ignora por completo las manifestaciones corporales, hipertonías, taquipneas, apneas, temblores o bloqueos discursivos del paciente.</div>
+            </label>
+            <label class="station-item">
+                <input type="radio" name="indA" value="2">
+                <div><span>Estación 2 (2 Puntos):</span> Detecta de manera tardía o superficial algunos indicadores aislados, sin integrarlos dinámicamente como el correlato físico de un secuestro amigdalino.</div>
+            </label>
+            <label class="station-item">
+                <input type="radio" name="indA" value="3">
+                <div><span>Estación 3 (3 Puntos):</span> Identifica con precisión milimétrica, en tiempo real e integralmente los marcadores motores (*tapping*, rigidez), autonómicos (sudoración, eritemas) y paralingüísticos.</div>
+            </label>
+        </div>
+
+        <!-- Indicador B: Escala de 3 Estaciones -->
+        <div class="indicator-box">
+            <h4>Indicador B: Anclaje Vincular en el Presente Transferencial (El "Aquí y Ahora")</h4>
+            
+            <label class="station-item">
+                <input type="radio" name="indB" value="1" required>
+                <div><span>Estación 1 (1 Punto):</span> Desvía la intervención hacia el pasado remoto o interpretaciones abstractas ("arqueología analítica"), desatendiendo el estado de alerta presente.</div>
+            </label>
+            <label class="station-item">
+                <input type="radio" name="indB" value="2">
+                <div><span>Estación 2 (2 Puntos):</span> Intenta traer el conflicto al presente de la sesión, pero lo efectúa desde un registro intelectualizado, distante o abstracto.</div>
+            </label>
+            <label class="station-item">
+                <input type="radio" name="indB" value="3">
+                <div><span>Estación 3 (3 Puntos):</span> Ancla rigurosamente la intervención en el intercambio actual entre paciente y terapeuta, utilizando los datos somáticos detectados para interrogar el presente.</div>
+            </label>
+        </div>
+
+        <!-- Indicador C: Escala de 3 Estaciones -->
+        <div class="indicator-box">
+            <h4>Indicador C: Activación Ejecutiva y Modulación Biológica (Disonancia Controlada)</h4>
+            
+            <label class="station-item">
+                <input type="radio" name="indC" value="1" required>
+                <div><span>Estación 1 (1 Punto):</span> Deja que el sistema del paciente permanezca en estado de inundación o hipervigilancia (picos de cortisol sostenidos), sin generar ninguna perturbación homeostática.</div>
+            </label>
+            <label class="station-item">
+                <input type="radio" name="indC" value="2">
+                <div><span>Estación 2 (2 Puntos):</span> Produce una modulación menor o intermitente del estrés; interrumpe parcialmente el discurso pero convoca de insuficiente manera a la corteza prefrontal.</div>
+            </label>
+            <label class="station-item">
+                <input type="radio" name="indC" value="3">
+                <div><span>Estación 3 (3 Puntos):</span> Logra una disonancia controlada altamente efectiva que frena la descarga de la amígdala, activa la corteza prefrontal ventromedial y propicia el descenso del cortisol.</div>
+            </label>
+        </div>
+
+        <div class="evaluation-controls">
+            <button type="button" id="btn-valorar" class="action-btn" style="flex: 1;">Valorar Rúbrica</button>
+            <div id="score-output" class="score-label">Puntaje: -- / 9</div>
+        </div>
+
+        <!-- SECCIÓN DESACOPLADA DE MAPEO VISUAL CON 4 CASILLAS Y HINTS -->
+        <div class="mapping-layout">
+            <!-- Contenedor Gráfico de la Silueta y Capas -->
+            <div class="mapping-container">
+                <img src="human.jpg" alt="Esquema Corporal Humano">
+                <img id="layer-motor" src="capa_motor.png" alt="Capa Motor (Rojo)" class="overlay-layer">
+                <img id="layer-paralinguistico" src="capa_paralinguistico.png" alt="Capa Paralingüística (Amarillo)" class="overlay-layer">
+                <img id="layer-autonomo" src="capa_autonomo.png" alt="Capa Autónoma (Blanco)" class="overlay-layer">
+                <img id="layer-prefrontal" src="capa_prefrontal.png" alt="Capa Prefrontal (Azul)" class="overlay-layer">
+            </div>
+
+            <!-- Casillas de verificación de capas independientes con sus respectivos hints -->
+            <div class="layer-controls">
+                <h4>Mapeo de Capas Anatómicas</h4>
+                
+                <div class="layer-checkbox-item">
+                    <label>
+                        <input type="checkbox" id="chk-layer-motor" value="motor"> 1. Capa Motora
+                    </label>
+                    <div class="layer-hint">Registra hipertonías, rigidez segmentaria y micro-movimientos de descarga motora.</div>
                 </div>
-                <div class="btn-container">
-                    <button type="submit" class="action-btn-pac">Guardar Registro HPA</button>
+
+                <div class="layer-checkbox-item">
+                    <label>
+                        <input type="checkbox" id="chk-layer-paralinguistico" value="paralinguistico"> 2. Capa Paralingüística
+                    </label>
+                    <div class="layer-hint">Registra variaciones taquilálicas, drásticas en tono/volumen y disfluencias defensivas.</div>
                 </div>
-                <div id="msg-estado-hpa" class="msg-estado"></div>
-            </form>
+
+                <div class="layer-checkbox-item">
+                    <label>
+                        <input type="checkbox" id="chk-layer-autonomo" value="autonomo"> 3. Capa Autónoma
+                    </label>
+                    <div class="layer-hint">Registra alteraciones respiratorias, taquipnea, signos vasomotores y sudoración.</div>
+                </div>
+
+                <div class="layer-checkbox-item">
+                    <label>
+                        <input type="checkbox" id="chk-layer-prefrontal" value="prefrontal"> 4. Capa Prefrontal
+                    </label>
+                    <div class="layer-hint">Registra la activación ejecutiva, modulación de amígdala y disonancia controlada efectiva.</div>
+                </div>
+
+                <button type="button" id="btn-mapeo" class="action-btn" style="margin-top: 5px; background: linear-gradient(135deg, #8e44ad, #6c3483);">Proyectar Mapeo</button>
+            </div>
+        </div>
+
+        <div style="margin-top: 15px;">
+            <button type="button" id="btn-informe" class="action-btn" style="background: linear-gradient(135deg, #27ae60, #219653); width: 100%;">Generar Informe & Guardar en BD</button>
         </div>
     </div>
 
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            if (typeof firebase === 'undefined') {
-                document.getElementById('msg-estado-hpa').innerText = "Error: Firebase no está disponible.";
-                return;
-            }
+    <div id="output" class="output-display">Seleccione un paciente, fecha, estancias en la rúbrica, marque las capas de la silueta y presione Valorar o Mapeo...</div>
 
+    <script>
+        (function() {
             const firebaseConfig = {
                 apiKey: "AIzaSyAd5dyriu-Z2Gms1Tq9u8A75LrQKHd0GC8",
                 authDomain: "aplicacion1-c794d.firebaseapp.com",
@@ -178,72 +428,174 @@
                 firebase.initializeApp(firebaseConfig);
             }
             const db = firebase.firestore();
+            const dbStatusEl = document.getElementById('db-status');
+            if(dbStatusEl) dbStatusEl.innerText = "Módulo 'Aquí y Ahora' cargado correctamente en el Frame.";
 
-            const selectPaciente = document.getElementById('select-paciente');
-            const hpaForm = document.getElementById('hpa-form');
-            const msgEstadoHpa = document.getElementById('msg-estado-hpa');
+            document.getElementById('fecha-sesion').valueAsDate = new Date();
 
-            // Cargar dinámicamente la lista de pacientes registrados en Firestore
-            async function poblarSelectPacientes() {
-                try {
-                    const snapshot = await db.collection("pacientes").get();
-                    selectPaciente.innerHTML = '<option value="">-- Seleccione un paciente --</option>';
+            const selectPaciente = document.getElementById('select-paciente'); // Asegúrate que tu select tenga este ID
 
-                    if (snapshot.empty) {
-                        selectPaciente.innerHTML = '<option value="">No hay pacientes registrados</option>';
-                        return;
-                    }
+            async function cargarPacientes() {
+                const snapshot = await db.collection("pacientes").get();
+                selectPaciente.innerHTML = '<option value="">-- Seleccione un paciente --</option>';
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const option = document.createElement('option');
+                    option.value = doc.id;
+                    option.textContent = data.nombre;
+                    selectPaciente.appendChild(option);
+                });
+            }
+            cargarPacientes();
 
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        const option = document.createElement('option');
-                        option.value = doc.id;
-                        option.textContent = `${data.nombre} (DNI: ${data.dni || 'S/D'})`;
-                        selectPaciente.appendChild(option);
-                    });
-                } catch (error) {
-                    console.error("Error al cargar pacientes para HPA:", error);
-                    selectPaciente.innerHTML = '<option value="">Error al cargar lista</option>';
+            function calcularPuntajeRubrica() {
+                const selectedA = document.querySelector('input[name="indA"]:checked');
+                const selectedB = document.querySelector('input[name="indB"]:checked');
+                const selectedC = document.querySelector('input[name="indC"]:checked');
+
+                if (!selectedA || !selectedB || !selectedC) {
+                    return null;
                 }
+
+                let scoreA = parseInt(selectedA.value);
+                let scoreB = parseInt(selectedB.value);
+                let scoreC = parseInt(selectedC.value);
+                let scoreTotal = scoreA + scoreB + scoreC;
+
+                return { scoreA, scoreB, scoreC, scoreTotal };
             }
 
-            poblarSelectPacientes();
-
-            // Guardar registro del Aquí y Ahora HPA
-            hpaForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const pacienteId = selectPaciente.value;
-                const sincronia = document.getElementById('sincronia').value;
-                const marcador = document.getElementById('marcador-somatico').value.trim();
-                const notas = document.getElementById('notas-hpa').value.trim();
-
+            document.getElementById('btn-valorar').addEventListener('click', () => {
+                const pacienteId = document.getElementById('select-paciente').value;
                 if (!pacienteId) {
-                    alert("Debe seleccionar un paciente.");
+                    alert("Por favor, seleccione un paciente antes de valorar.");
                     return;
                 }
 
-                msgEstadoHpa.innerText = "Guardando registro clínico...";
+                const res = calcularPuntajeRubrica();
+                if (!res) {
+                    alert("Por favor, seleccione una estación en cada uno de los tres indicadores de la rúbrica.");
+                    return;
+                }
+
+                document.getElementById('score-output').innerText = `Puntaje: ${res.scoreTotal} / 9`;
+
+                let categoria = "";
+                let interpretacion = "";
+                if (res.scoreTotal <= 4) {
+                    categoria = "Categoría I: Disconvergencia Somático-Temporal (3 - 4 puntos)";
+                    interpretacion = "El terapeuta opera disociado de la corporalidad y del presente. El paciente permanece en el circuito de supervivencia (eje HPA encendido).";
+                } else if (res.scoreTotal <= 7) {
+                    categoria = "Categoría II: Regulación Intermitente (5 - 7 puntos)";
+                    interpretacion = "Existe intención clínica de registrar el estado del paciente pero falta sincronía temporal. Perturbaciones homeostáticas moderadas.";
+                } else {
+                    categoria = "Categoría III: Convergencia Táctica en Tiempo Real (8 - 9 puntos)";
+                    interpretacion = "Alta maestría técnica. Se detecta con rigor el eje HPA, se ancla en el aquí y ahora y se activa la corteza prefrontal ventromedial.";
+                }
+
+                const outputDisplay = document.getElementById('output');
+                outputDisplay.innerText = `VALORACIÓN RÚBRICA 1:\n- Puntaje Total: ${res.scoreTotal} / 9 (A:${res.scoreA}, B:${res.scoreB}, C:${res.scoreC})\n- Categoría: ${categoria}\n- Interpretación: ${interpretacion}`;
+            });
+
+            document.getElementById('btn-mapeo').addEventListener('click', () => {
+                const chkMotor = document.getElementById('chk-layer-motor').checked;
+                const chkParalinguistico = document.getElementById('chk-layer-paralinguistico').checked;
+                const chkAutonomo = document.getElementById('chk-layer-autonomo').checked;
+                const chkPrefrontal = document.getElementById('chk-layer-prefrontal').checked;
+
+                const layerMotor = document.getElementById('layer-motor');
+                const layerParalinguistico = document.getElementById('layer-paralinguistico');
+                const layerAutonomo = document.getElementById('layer-autonomo');
+                const layerPrefrontal = document.getElementById('layer-prefrontal');
+
+                if (chkMotor) layerMotor.classList.add('visible'); else layerMotor.classList.remove('visible');
+                if (chkParalinguistico) layerParalinguistico.classList.add('visible'); else layerParalinguistico.classList.remove('visible');
+                if (chkAutonomo) layerAutonomo.classList.add('visible'); else layerAutonomo.classList.remove('visible');
+                if (chkPrefrontal) layerPrefrontal.classList.add('visible'); else layerPrefrontal.classList.remove('visible');
+
+                let capasSeleccionadas = [];
+                if (chkMotor) capasSeleccionadas.push("Motora (Rojo)");
+                if (chkParalinguistico) capasSeleccionadas.push("Paralingüística (Amarillo)");
+                if (chkAutonomo) capasSeleccionadas.push("Autónoma (Blanco)");
+                if (chkPrefrontal) capasSeleccionadas.push("Prefrontal (Azul)");
+
+                const outputDisplay = document.getElementById('output');
+                outputDisplay.innerText = `MAPEO VISUAL PROYECTADO:\n- Capas activas sobre human.jpg: ${capasSeleccionadas.length > 0 ? capasSeleccionadas.join(', ') : 'Ninguna'}`;
+            });
+
+            document.getElementById('btn-informe').addEventListener('click', async () => {
+                const selectPaciente = document.getElementById('select-paciente');
+                const pacienteId = selectPaciente.value;
+                const pacienteNombre = selectPaciente.options[selectPaciente.selectedIndex].text;
+                const fechaSesion = document.getElementById('fecha-sesion').value;
+
+                if (!pacienteId) {
+                    alert("Por favor, seleccione un paciente para generar y guardar el informe.");
+                    return;
+                }
+
+                const res = calcularPuntajeRubrica();
+                if (!res) {
+                    alert("Complete la valoración de los indicadores de la rúbrica antes de generar el informe.");
+                    return;
+                }
+
+                const chkMotor = document.getElementById('chk-layer-motor').checked;
+                const chkParalinguistico = document.getElementById('chk-layer-paralinguistico').checked;
+                const chkAutonomo = document.getElementById('chk-layer-autonomo').checked;
+                const chkPrefrontal = document.getElementById('chk-layer-prefrontal').checked;
+
+                let capasSeleccionadas = [];
+                if (chkMotor) capasSeleccionadas.push("Motora");
+                if (chkParalinguistico) capasSeleccionadas.push("Paralingüística");
+                if (chkAutonomo) capasSeleccionadas.push("Autónoma");
+                if (chkPrefrontal) capasSeleccionadas.push("Prefrontal");
+
+                let categoria = "";
+                let interpretacion = "";
+                if (res.scoreTotal <= 4) {
+                    categoria = "Categoría I: Disconvergencia Somático-Temporal";
+                    interpretacion = "El terapeuta opera disociado de la corporalidad y del presente. El paciente permanece en el circuito de supervivencia.";
+                } else if (res.scoreTotal <= 7) {
+                    categoria = "Categoría II: Regulación Intermitente";
+                    interpretacion = "Intención clínica adecuada pero falta de sincronía temporal. Perturbaciones homeostáticas moderadas.";
+                } else {
+                    categoria = "Categoría III: Convergencia Táctica en Tiempo Real";
+                    interpretacion = "Alta maestría técnica. Se detecta con rigor el eje HPA y se activa la corteza prefrontal ventromedial.";
+                }
+
+                const informeTexto = `INFORME CLÍNICO - RÚBRICA 1\n` +
+                    `----------------------------------------\n` +
+                    `Paciente: ${pacienteNombre}\n` +
+                    `Fecha de Sesión: ${fechaSesion}\n` +
+                    `Puntaje Rúbrica: ${res.scoreTotal} de 9 puntos\n` +
+                    `Categoría Evaluativa: ${categoria}\n` +
+                    `Desglose Rúbrica: Indicador A (${res.scoreA}/3) | Indicador B (${res.scoreB}/3) | Indicador C (${res.scoreC}/3)\n` +
+                    `Interpretación Clínica: ${interpretacion}\n` +
+                    `Mapeo Silueta Corporal Activo: ${capasSeleccionadas.length > 0 ? capasSeleccionadas.join(', ') : 'Ninguna capa marcada'}`;
+
+                const outputDisplay = document.getElementById('output');
+                outputDisplay.innerText = informeTexto;
 
                 try {
-                    await db.collection("registros_hpa").add({
-                        pacienteId,
-                        sincronia: Number(sincronia),
-                        marcadorSomatico: marcador,
-                        notasHpa: notas,
-                        fecha: new Date().toISOString()
+                    await db.collection("informes_rubrica").add({
+                        pacienteId: pacienteId,
+                        pacienteNombre: pacienteNombre,
+                        fechaSesion: fechaSesion,
+                        puntajeTotal: res.scoreTotal,
+                        desglose: { indicadorA: res.scoreA, indicadorB: res.scoreB, indicadorC: res.scoreC },
+                        categoria: categoria,
+                        interpretacion: interpretacion,
+                        capasMapeo: capasSeleccionadas,
+                        timestamp: new Date().toISOString()
                     });
-
-                    msgEstadoHpa.innerText = "¡Registro del Eje HPA guardado exitosamente!";
-                    hpaForm.reset();
-                    poblarSelectPacientes();
-                    setTimeout(() => { msgEstadoHpa.innerText = ""; }, 3000);
-                } catch (error) {
-                    console.error("Error al guardar HPA:", error);
-                    msgEstadoHpa.style.color = "#ff8080";
-                    msgEstadoHpa.innerText = `Error: ${error.message}`;
+                    if(dbStatusEl) dbStatusEl.innerText = "Informe guardado en base de datos y mostrado en pantalla.";
+                } catch (e) {
+                    console.error("Error al guardar informe: ", e);
+                    if(dbStatusEl) dbStatusEl.innerText = "Informe mostrado en pantalla, pero ocurrió un error al guardar en la base de datos.";
                 }
             });
-        });
+        })();
     </script>
 </body>
 </html>
