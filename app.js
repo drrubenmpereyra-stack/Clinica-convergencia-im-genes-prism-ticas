@@ -188,7 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 { nombre: "6.3 Urgencia y Sentido",link: "urgencia_sentido.html", clase: "btn-b6-s", desc: "Rúbrica y grafico de urgencia y sentido." },
                 { nombre: "6.4 Viabilidad y sostén",link: "viabilidad_sosten.html", clase: "btn-b6-s", desc: "Rúbrica y grafico de viabilidad y sostén." },
                 { nombre: "6.5 Validación y freno",link: "validacion_freno.html", clase: "btn-b6-s", desc: "Rúbrica y gráfico de validación y freno." },
-                { nombre: "6.6 Gráfico de integración",link: "grafico_integracion.html", clase: "btn-b6-s", desc: "Grafico de integración del proyeco de vida." }
+                { nombre: "6.6 Exploración vital",link: "exploracion_vital.html", clase: "btn-b6-s", desc: "Rúbrica y gráfico de exploración vital." },
+                { nombre: "6.7 Gráfico de integración",link: "grafico_integracion.html", clase: "btn-b6-s", desc: "Grafico de integración del proyeco de vida." }
             ]
         },
         salir: {
