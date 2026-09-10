@@ -140,6 +140,11 @@
 
         .btn-edit-row { background-color: #f39c12; color: #fff; }
         .btn-delete-row { background-color: #e74c3c; color: #fff; }
+        .msg-estado {
+            font-size: 0.85rem;
+            margin-top: 8px;
+            color: #38bdf8;
+        }
     </style>
 </head>
 <body>
@@ -171,6 +176,7 @@
                     <button type="submit" id="btn-accion" class="action-btn-pac btn-registrar">Registrar Paciente</button>
                     <button type="button" id="btn-cancelar" class="action-btn-pac btn-cancelar">Cancelar</button>
                 </div>
+                <div id="msg-estado" class="msg-estado"></div>
             </form>
         </div>
 
@@ -195,11 +201,31 @@
         </div>
     </div>
 
+    <!-- SDKs de Firebase Compat (versión 9.23.0 alineada con index.html) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
     <script>
-        (function() {
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase === 'undefined') {
+                document.getElementById('msg-estado').innerText = "Error crítico: El objeto firebase no está disponible.";
+                return;
+            }
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyAd5dyriu-Z2Gms1Tq9u8A75LrQKHd0GC8",
+                authDomain: "aplicacion1-c794d.firebaseapp.com",
+                projectId: "aplicacion1-c794d",
+                storageBucket: "aplicacion1-c794d.firebasestorage.app",
+                messagingSenderId: "310699962592",
+                appId: "1:310699962592:web:71794de4268e47b35da085",
+                measurementId: "G-R3QHSGSNQB"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             const db = firebase.firestore();
-            const dbStatusEl = document.getElementById('db-status');
-            if(dbStatusEl) dbStatusEl.innerText = "Módulo de Pacientes cargado correctamente en el Frame.";
 
             const patientForm = document.getElementById('patient-form');
             const patientTableBody = document.getElementById('patient-table-body');
@@ -207,6 +233,7 @@
             const btnAccion = document.getElementById('btn-accion');
             const btnCancelar = document.getElementById('btn-cancelar');
             const patientIdInput = document.getElementById('patient-id');
+            const msgEstado = document.getElementById('msg-estado');
 
             cargarPacientesFirestore();
 
@@ -219,7 +246,7 @@
                 const profesion = document.getElementById('profesion').value.trim();
                 const docId = patientIdInput.value;
 
-                if(dbStatusEl) dbStatusEl.innerText = "Procesando en Firestore...";
+                msgEstado.innerText = "Guardando en base de datos...";
 
                 try {
                     if (docId) {
@@ -227,24 +254,22 @@
                             nombre, dni, telefono, profesion,
                             actualizado: new Date().toISOString()
                         }, { merge: true });
-                        if(dbStatusEl) dbStatusEl.innerText = `Paciente ${nombre} actualizado correctamente.`;
+                        msgEstado.innerText = `Paciente ${nombre} actualizado correctamente.`;
                     } else {
                         await db.collection("pacientes").add({
                             nombre, dni, telefono, profesion,
                             creado: new Date().toISOString()
                         });
-                        if(dbStatusEl) dbStatusEl.innerText = `Paciente ${nombre} registrado exitosamente.`;
+                        msgEstado.innerText = `Paciente ${nombre} registrado exitosamente.`;
                     }
                     
                     resetForm();
                     await cargarPacientesFirestore();
+                    setTimeout(() => { msgEstado.innerText = ""; }, 3000);
                 } catch (error) {
                     console.error("Error en Firestore:", error);
-                    if(dbStatusEl) {
-                        dbStatusEl.style.color = "#ff8080";
-                        dbStatusEl.innerText = `Error: ${error.message}`;
-                    }
-                    alert(`Error al guardar en base de datos: ${error.message}`);
+                    msgEstado.style.color = "#ff8080";
+                    msgEstado.innerText = `Error: ${error.message}`;
                 }
             });
 
@@ -276,10 +301,7 @@
                     });
                 } catch (error) {
                     console.error("Error al leer Firestore:", error);
-                    if(dbStatusEl) {
-                        dbStatusEl.style.color = "#ff8080";
-                        dbStatusEl.innerText = `Error de lectura: ${error.message}`;
-                    }
+                    patientTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#ff8080;">Error al cargar datos.</td></tr>`;
                 }
             }
 
@@ -313,14 +335,13 @@
                 if (confirm(`¿Estás seguro de eliminar permanentemente a ${nombre}?`)) {
                     try {
                         await db.collection("pacientes").doc(id).delete();
-                        if(dbStatusEl) dbStatusEl.innerText = `Paciente ${nombre} eliminado.`;
+                        msgEstado.innerText = `Paciente ${nombre} eliminado.`;
                         await cargarPacientesFirestore();
+                        setTimeout(() => { msgEstado.innerText = ""; }, 3000);
                     } catch (error) {
                         console.error("Error al eliminar:", error);
-                        if(dbStatusEl) {
-                            dbStatusEl.style.color = "#ff8080";
-                            dbStatusEl.innerText = `Error al eliminar: ${error.message}`;
-                        }
+                        msgEstado.style.color = "#ff8080";
+                        msgEstado.innerText = `Error al eliminar: ${error.message}`;
                     }
                 }
             }
@@ -329,7 +350,7 @@
                 if (!str) return '';
                 return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
             }
-        })();
+        });
     </script>
 </body>
 </html>
