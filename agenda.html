@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica de la Convergencia - Agenda de Turnos</title>
+    <style>
+        :root {
+            --purple-glow: 0 0 12px rgba(186, 85, 211, 0.6), 0 0 24px rgba(160, 32, 240, 0.4);
+            --purple-border: #ba55d3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: rgba(18, 16, 28, 0.92);
+            color: #f1f1f1;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .admin-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            background: rgba(18, 16, 28, 0.88);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .admin-title {
+            color: #e2b7ff;
+            font-size: 1.2rem;
+            margin-top: 0;
+            border-bottom: 1px solid rgba(186, 85, 211, 0.3);
+            padding-bottom: 8px;
+        }
+
+        /* Barra de Estadística Superior */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card {
+            background: rgba(28, 25, 42, 0.9);
+            border: 1px solid rgba(186, 85, 211, 0.4);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .stat-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.85rem;
+            color: #d8b4fe;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #e2b7ff;
+            font-family: monospace;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 650px) {
+            .form-grid, .stats-bar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group-pac {
+            text-align: left;
+        }
+
+        .form-group-pac label {
+            display: block;
+            font-size: 0.85rem;
+            color: #d8b4fe;
+            margin-bottom: 5px;
+        }
+
+        .form-group-pac input, .form-group-pac select {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(28, 25, 42, 0.8);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group-pac select option {
+            background: #1c192a;
+            color: #fff;
+        }
+
+        .form-group-pac input:focus, .form-group-pac select:focus {
+            border-color: var(--purple-border);
+            box-shadow: var(--purple-glow);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn-pac {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            color: #fff;
+        }
+
+        .btn-registrar { background: linear-gradient(135deg, #9b59b6, #8e44ad); display: inline-block; }
+        .btn-cancelar { background: linear-gradient(135deg, #7f8c8d, #616a6b); display: none; }
+
+        .action-btn-pac:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--purple-glow);
+        }
+
+        .patient-table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        table.patient-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        table.patient-table th, table.patient-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(186, 85, 211, 0.2);
+        }
+
+        table.patient-table th {
+            color: #e2b7ff;
+            background: rgba(28, 25, 42, 0.9);
+        }
+
+        table.patient-table td {
+            color: #e5e5e5;
+        }
+
+        .table-btn {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .btn-edit-row { background-color: #f39c12; color: #fff; }
+        .btn-delete-row { background-color: #e74c3c; color: #fff; }
+
+        .badge-programado { background-color: rgba(52, 152, 219, 0.2); color: #3498db; padding: 3px 8px; border-radius: 4px; font-weight: 600; border: 1px solid #3498db; }
+        .badge-atendido { background-color: rgba(39, 174, 96, 0.2); color: #2ecc71; padding: 3px 8px; border-radius: 4px; font-weight: 600; border: 1px solid #2ecc71; }
+        .badge-cancelado { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; padding: 3px 8px; border-radius: 4px; font-weight: 600; border: 1px solid #e74c3c; }
+
+        .msg-estado {
+            font-size: 0.85rem;
+            margin-top: 8px;
+            color: #38bdf8;
+        }
+    </style>
+
+    <!-- SDKs de Firebase Compat alineados -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+    <div class="view-section-agenda" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+        
+        <!-- Barra de Estadística Superior -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <h4>Total Programados</h4>
+                <div id="stat-programados" class="stat-value">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Atendidos</h4>
+                <div id="stat-atendidos" class="stat-value">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Cancelados</h4>
+                <div id="stat-cancelados" class="stat-value">0</div>
+            </div>
+        </div>
+
+        <div class="admin-container">
+            <h3 class="admin-title" id="form-title">Programar Nuevo Turno</h3>
+            <form id="agenda-form">
+                <input type="hidden" id="turno-id" value="">
+                <div class="form-grid">
+                    <div class="form-group-pac">
+                        <label for="select-paciente">Paciente</label>
+                        <select id="select-paciente" required>
+                            <option value="">-- Cargando pacientes --</option>
+                        </select>
+                    </div>
+                    <div class="form-group-pac">
+                        <label for="fecha-turno">Fecha del Turno</label>
+                        <input type="date" id="fecha-turno" required>
+                    </div>
+                    <div class="form-group-pac">
+                        <label for="hora-turno">Hora del Turno</label>
+                        <input type="time" id="hora-turno" required>
+                    </div>
+                    <div class="form-group-pac">
+                        <label for="tipo-sesion">Tipo de Sesión</label>
+                        <select id="tipo-sesion" required>
+                            <option value="Sesión individual">Sesión individual</option>
+                            <option value="Sesión grupal">Sesión grupal</option>
+                            <option value="Evaluación inicial">Evaluación inicial</option>
+                            <option value="Control HPA">Control HPA</option>
+                        </select>
+                    </div>
+                    <div class="form-group-pac" style="grid-column: span 2;">
+                        <label for="estado-turno">Estado del Turno</label>
+                        <select id="estado-turno" required>
+                            <option value="Programado">Programado</option>
+                            <option value="Atendido">Atendido</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="submit" id="btn-accion" class="action-btn-pac btn-registrar">Guardar Turno</button>
+                    <button type="button" id="btn-cancelar" class="action-btn-pac btn-cancelar">Cancelar</button>
+                </div>
+                <div id="msg-estado" class="msg-estado"></div>
+            </form>
+        </div>
+
+        <div class="admin-container">
+            <h3 class="admin-title">Agenda y Gestión de Turnos</h3>
+            <div class="patient-table-container">
+                <table class="patient-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Paciente</th>
+                            <th>Tipo de Sesión</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agenda-table-body">
+                        <!-- Turnos cargados desde Firestore -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase === 'undefined') {
+                alert("Error crítico: Firebase no está disponible.");
+                return;
+            }
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyAd5dyriu-Z2Gms1Tq9u8A75LrQKHd0GC8",
+                authDomain: "aplicacion1-c794d.firebaseapp.com",
+                projectId: "aplicacion1-c794d",
+                storageBucket: "aplicacion1-c794d.firebasestorage.app",
+                messagingSenderId: "310699962592",
+                appId: "1:310699962592:web:71794de4268e47b35da085",
+                measurementId: "G-R3QHSGSNQB"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const db = firebase.firestore();
+
+            const form = document.getElementById('agenda-form');
+            const selectPaciente = document.getElementById('select-paciente');
+            const tableBody = document.getElementById('agenda-table-body');
+            const formTitle = document.getElementById('form-title');
+            const btnAccion = document.getElementById('btn-accion');
+            const btnCancelar = document.getElementById('btn-cancelar');
+            const turnoIdInput = document.getElementById('turno-id');
+            const msgEstado = document.getElementById('msg-estado');
+            
+            const statProgramados = document.getElementById('stat-programados');
+            const statAtendidos = document.getElementById('stat-atendidos');
+            const statCancelados = document.getElementById('stat-cancelados');
+
+            document.getElementById('fecha-turno').valueAsDate = new Date();
+            document.getElementById('hora-turno').value = "10:00";
+
+            cargarPacientes();
+            cargarTurnos();
+
+            async function cargarPacientes() {
+                try {
+                    const snapshot = await db.collection("pacientes").get();
+                    selectPaciente.innerHTML = '<option value="">-- Seleccione un paciente --</option>';
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const option = document.createElement('option');
+                        option.value = data.nombre;
+                        option.textContent = data.nombre;
+                        selectPaciente.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error("Error al cargar pacientes:", error);
+                }
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const paciente = selectPaciente.value;
+                const fecha = document.getElementById('fecha-turno').value;
+                const hora = document.getElementById('hora-turno').value;
+                const tipoSesion = document.getElementById('tipo-sesion').value;
+                const estado = document.getElementById('estado-turno').value;
+                const turnoId = turnoIdInput.value;
+
+                msgEstado.innerText = "Guardando turno en base de datos...";
+
+                try {
+                    if (turnoId) {
+                        await db.collection("agenda_turnos").doc(turnoId).set({
+                            paciente, fecha, hora, tipoSesion, estado,
+                            actualizado: new Date().toISOString()
+                        }, { merge: true });
+                        msgEstado.innerText = "Turno actualizado correctamente.";
+                    } else {
+                        await db.collection("agenda_turnos").add({
+                            paciente, fecha, hora, tipoSesion, estado,
+                            creado: new Date().toISOString()
+                        });
+                        msgEstado.innerText = "Turno programado exitosamente.";
+                    }
+
+                    resetForm();
+                    await cargarTurnos();
+                    setTimeout(() => { msgEstado.innerText = ""; }, 3000);
+                } catch (error) {
+                    console.error("Error al guardar turno:", error);
+                    msgEstado.style.color = "#ff8080";
+                    msgEstado.innerText = `Error: ${error.message}`;
+                }
+            });
+
+            async function cargarTurnos() {
+                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#c084fc;">Cargando agenda...</td></tr>`;
+                try {
+                    // Consulta simplificada para evitar errores de índices compuestos en Firestore
+                    const snapshot = await db.collection("agenda_turnos").orderBy('fecha', 'asc').get();
+                    tableBody.innerHTML = '';
+
+                    let countProgramados = 0;
+                    let countAtendidos = 0;
+                    let countCancelados = 0;
+
+                    if (snapshot.empty) {
+                        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#b19cd9;">No hay turnos programados en la agenda.</td></tr>`;
+                        statProgramados.textContent = "0";
+                        statAtendidos.textContent = "0";
+                        statCancelados.textContent = "0";
+                        return;
+                    }
+
+                    // Convertir documentos a array para ordenarlos de forma segura en memoria por fecha y hora
+                    let turnosList = [];
+                    snapshot.forEach(doc => {
+                        turnosList.push({ id: doc.id, ...doc.data() });
+                    });
+
+                    turnosList.sort((a, b) => {
+                        if (a.fecha === b.fecha) {
+                            return (a.hora || "").localeCompare(b.hora || "");
+                        }
+                        return (a.fecha || "").localeCompare(b.fecha || "");
+                    });
+
+                    turnosList.forEach(data => {
+                        if (data.estado === "Programado") countProgramados++;
+                        else if (data.estado === "Atendido") countAtendidos++;
+                        else if (data.estado === "Cancelado") countCancelados++;
+
+                        let badgeClass = "badge-programado";
+                        if (data.estado === "Atendido") badgeClass = "badge-atendido";
+                        if (data.estado === "Cancelado") badgeClass = "badge-cancelado";
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${data.fecha || ''}</td>
+                            <td>${data.hora || ''}</td>
+                            <td>${data.paciente || ''}</td>
+                            <td>${data.tipoSesion || ''}</td>
+                            <td><span class="${badgeClass}">${data.estado || ''}</span></td>
+                            <td>
+                                <button type="button" class="table-btn btn-edit-row" onclick="prepararEdicionTurno('${data.id}', '${escapeHtml(data.paciente)}', '${data.fecha}', '${data.hora}', '${escapeHtml(data.tipoSesion)}', '${data.estado}')">Editar</button>
+                                <button type="button" class="table-btn btn-delete-row" onclick="eliminarTurno('${data.id}')">Eliminar</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+
+                    statProgramados.textContent = countProgramados;
+                    statAtendidos.textContent = countAtendidos;
+                    statCancelados.textContent = countCancelados;
+
+                } catch (error) {
+                    console.error("Error al leer turnos:", error);
+                    tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#ff8080;">Error al cargar la agenda.</td></tr>`;
+                }
+            }
+
+            window.prepararEdicionTurno = function(id, paciente, fecha, hora, tipoSesion, estado) {
+                turnoIdInput.value = id;
+                selectPaciente.value = paciente;
+                document.getElementById('fecha-turno').value = fecha;
+                document.getElementById('hora-turno').value = hora;
+                document.getElementById('tipo-sesion').value = tipoSesion;
+                document.getElementById('estado-turno').value = estado;
+
+                formTitle.innerText = "Modificar Turno Programado";
+                btnAccion.innerText = "Guardar Cambios";
+                btnAccion.style.background = "linear-gradient(135deg, #f39c12, #d68910)";
+                btnCancelar.style.display = "inline-block";
+            }
+
+            btnCancelar.addEventListener('click', () => {
+                resetForm();
+            });
+
+            function resetForm() {
+                form.reset();
+                turnoIdInput.value = "";
+                document.getElementById('fecha-turno').valueAsDate = new Date();
+                document.getElementById('hora-turno').value = "10:00";
+                formTitle.innerText = "Programar Nuevo Turno";
+                btnAccion.innerText = "Guardar Turno";
+                btnAccion.style.background = "linear-gradient(135deg, #9b59b6, #8e44ad)";
+                btnCancelar.style.display = "none";
+            }
+
+            window.eliminarTurno = async function(id) {
+                if (confirm("¿Está seguro de eliminar este turno de la agenda?")) {
+                    try {
+                        await db.collection("agenda_turnos").doc(id).delete();
+                        await cargarTurnos();
+                    } catch (error) {
+                        console.error("Error al eliminar turno:", error);
+                        alert(`Error al eliminar: ${error.message}`);
+                    }
+                }
+            }
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            }
+        });
+    </script>
+</body>
+</html>

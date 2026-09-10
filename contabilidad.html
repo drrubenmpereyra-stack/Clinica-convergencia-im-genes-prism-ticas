@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica de la Convergencia - Contabilidad</title>
+    <style>
+        :root {
+            --purple-glow: 0 0 12px rgba(186, 85, 211, 0.6), 0 0 24px rgba(160, 32, 240, 0.4);
+            --purple-border: #ba55d3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: rgba(18, 16, 28, 0.92);
+            color: #f1f1f1;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .admin-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            background: rgba(18, 16, 28, 0.88);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .admin-title {
+            color: #e2b7ff;
+            font-size: 1.2rem;
+            margin-top: 0;
+            border-bottom: 1px solid rgba(186, 85, 211, 0.3);
+            padding-bottom: 8px;
+        }
+
+        /* Barra de Estadística Superior */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card {
+            background: rgba(28, 25, 42, 0.9);
+            border: 1px solid rgba(186, 85, 211, 0.4);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .stat-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.85rem;
+            color: #d8b4fe;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #e2b7ff;
+            font-family: monospace;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 650px) {
+            .form-grid, .stats-bar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group-pac {
+            text-align: left;
+        }
+
+        .form-group-pac label {
+            display: block;
+            font-size: 0.85rem;
+            color: #d8b4fe;
+            margin-bottom: 5px;
+        }
+
+        .form-group-pac input, .form-group-pac select {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(28, 25, 42, 0.8);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group-pac select option {
+            background: #1c192a;
+            color: #fff;
+        }
+
+        .form-group-pac input:focus, .form-group-pac select:focus {
+            border-color: var(--purple-border);
+            box-shadow: var(--purple-glow);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn-pac {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            color: #fff;
+        }
+
+        .btn-registrar { background: linear-gradient(135deg, #9b59b6, #8e44ad); display: inline-block; }
+        .btn-cancelar { background: linear-gradient(135deg, #7f8c8d, #616a6b); display: none; }
+
+        .action-btn-pac:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--purple-glow);
+        }
+
+        .patient-table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        table.patient-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        table.patient-table th, table.patient-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(186, 85, 211, 0.2);
+        }
+
+        table.patient-table th {
+            color: #e2b7ff;
+            background: rgba(28, 25, 42, 0.9);
+        }
+
+        table.patient-table td {
+            color: #e5e5e5;
+        }
+
+        .table-btn {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .btn-edit-row { background-color: #f39c12; color: #fff; }
+        .btn-delete-row { background-color: #e74c3c; color: #fff; }
+
+        .badge-abonado { background-color: rgba(39, 174, 96, 0.2); color: #2ecc71; padding: 3px 8px; border-radius: 4px; font-weight: 600; border: 1px solid #2ecc71; }
+        .badge-pendiente { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; padding: 3px 8px; border-radius: 4px; font-weight: 600; border: 1px solid #e74c3c; }
+
+        .msg-estado {
+            font-size: 0.85rem;
+            margin-top: 8px;
+            color: #38bdf8;
+        }
+    </style>
+
+    <!-- SDKs de Firebase Compat alineados -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+    <div class="view-section-contabilidad" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+        
+        <!-- Barra de Estadística Superior -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <h4>Total Abonado</h4>
+                <div id="stat-abonado" class="stat-value">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <h4>Total Pendiente</h4>
+                <div id="stat-pendiente" class="stat-value">$0.00</div>
+            </div>
+        </div>
+
+        <div class="admin-container">
+            <h3 class="admin-title" id="form-title">Registrar Movimiento Contable</h3>
+            <form id="contabilidad-form">
+                <input type="hidden" id="registro-id" value="">
+                <div class="form-grid">
+                    <div class="form-group-pac">
+                        <label for="select-paciente">Paciente</label>
+                        <select id="select-paciente" required>
+                            <option value="">-- Cargando pacientes --</option>
+                        </select>
+                    </div>
+                    <div class="form-group-pac">
+                        <label for="monto">Monto Abonado ($)</label>
+                        <input type="number" id="monto" step="0.01" required placeholder="Ej. 15000">
+                    </div>
+                    <div class="form-group-pac">
+                        <label for="medio-pago">Medio de Pago</label>
+                        <select id="medio-pago" required>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia">Transferencia</option>
+                        </select>
+                    </div>
+                    <div class="form-group-pac">
+                        <label for="fecha">Fecha</label>
+                        <input type="date" id="fecha" required>
+                    </div>
+                    <div class="form-group-pac">
+                        <label for="concepto">Concepto</label>
+                        <select id="concepto" required>
+                            <option value="Sesión de tratamiento">Sesión de tratamiento</option>
+                            <option value="Sesion grupal">Sesion grupal</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group-pac">
+                        <label for="estado">Estado</label>
+                        <select id="estado" required>
+                            <option value="Abonado">Abonado</option>
+                            <option value="Pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="submit" id="btn-accion" class="action-btn-pac btn-registrar">Guardar Registro</button>
+                    <button type="button" id="btn-cancelar" class="action-btn-pac btn-cancelar">Cancelar</button>
+                </div>
+                <div id="msg-estado" class="msg-estado"></div>
+            </form>
+        </div>
+
+        <div class="admin-container">
+            <h3 class="admin-title">Historial de Movimientos Contables</h3>
+            <div class="patient-table-container">
+                <table class="patient-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Paciente</th>
+                            <th>Concepto</th>
+                            <th>Monto</th>
+                            <th>Medio de Pago</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contabilidad-table-body">
+                        <!-- Registros cargados desde Firestore -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase === 'undefined') {
+                alert("Error crítico: Firebase no está disponible.");
+                return;
+            }
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyAd5dyriu-Z2Gms1Tq9u8A75LrQKHd0GC8",
+                authDomain: "aplicacion1-c794d.firebaseapp.com",
+                projectId: "aplicacion1-c794d",
+                storageBucket: "aplicacion1-c794d.firebasestorage.app",
+                messagingSenderId: "310699962592",
+                appId: "1:310699962592:web:71794de4268e47b35da085",
+                measurementId: "G-R3QHSGSNQB"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const db = firebase.firestore();
+
+            const form = document.getElementById('contabilidad-form');
+            const selectPaciente = document.getElementById('select-paciente');
+            const tableBody = document.getElementById('contabilidad-table-body');
+            const formTitle = document.getElementById('form-title');
+            const btnAccion = document.getElementById('btn-accion');
+            const btnCancelar = document.getElementById('btn-cancelar');
+            const registroIdInput = document.getElementById('registro-id');
+            const msgEstado = document.getElementById('msg-estado');
+            const statAbonado = document.getElementById('stat-abonado');
+            const statPendiente = document.getElementById('stat-pendiente');
+
+            // Establecer fecha actual por defecto
+            document.getElementById('fecha').valueAsDate = new Date();
+
+            cargarPacientes();
+            cargarContabilidad();
+
+            // Cargar selector de pacientes
+            async function cargarPacientes() {
+                try {
+                    const snapshot = await db.collection("pacientes").get();
+                    selectPaciente.innerHTML = '<option value="">-- Seleccione un paciente --</option>';
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const option = document.createElement('option');
+                        option.value = data.nombre;
+                        option.textContent = data.nombre;
+                        selectPaciente.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error("Error al cargar pacientes:", error);
+                }
+            }
+
+            // Guardar o Actualizar registro en Firestore
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const paciente = selectPaciente.value;
+                const monto = parseFloat(document.getElementById('monto').value);
+                const medioPago = document.getElementById('medio-pago').value;
+                const fecha = document.getElementById('fecha').value;
+                const concepto = document.getElementById('concepto').value;
+                const estado = document.getElementById('estado').value;
+                const regId = registroIdInput.value;
+
+                msgEstado.innerText = "Guardando en base de datos...";
+
+                try {
+                    if (regId) {
+                        await db.collection("contabilidad").doc(regId).set({
+                            paciente, monto, medioPago, fecha, concepto, estado,
+                            actualizado: new Date().toISOString()
+                        }, { merge: true });
+                        msgEstado.innerText = "Registro actualizado correctamente.";
+                    } else {
+                        await db.collection("contabilidad").add({
+                            paciente, monto, medioPago, fecha, concepto, estado,
+                            creado: new Date().toISOString()
+                        });
+                        msgEstado.innerText = "Registro guardado exitosamente.";
+                    }
+
+                    resetForm();
+                    await cargarContabilidad();
+                    setTimeout(() => { msgEstado.innerText = ""; }, 3000);
+                } catch (error) {
+                    console.error("Error al guardar contabilidad:", error);
+                    msgEstado.style.color = "#ff8080";
+                    msgEstado.innerText = `Error: ${error.message}`;
+                }
+            });
+
+            // Cargar y mostrar datos en la tabla y actualizar estadísticas
+            async function cargarContabilidad() {
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#c084fc;">Cargando registros...</td></tr>`;
+                try {
+                    const snapshot = await db.collection("contabilidad").orderBy('fecha', 'desc').get();
+                    tableBody.innerHTML = '';
+
+                    let totalAbonado = 0;
+                    let totalPendiente = 0;
+
+                    if (snapshot.empty) {
+                        tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#b19cd9;">No hay movimientos contables registrados.</td></tr>`;
+                        statAbonado.textContent = "$0.00";
+                        statPendiente.textContent = "$0.00";
+                        return;
+                    }
+
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const montoNum = Number(data.monto) || 0;
+
+                        if (data.estado === "Abonado") {
+                            totalAbonado += montoNum;
+                        } else if (data.estado === "Pendiente") {
+                            totalPendiente += montoNum;
+                        }
+
+                        const badgeClass = data.estado === "Abonado" ? "badge-abonado" : "badge-pendiente";
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${data.fecha || ''}</td>
+                            <td>${data.paciente || ''}</td>
+                            <td>${data.concepto || ''}</td>
+                            <td>$${montoNum.toFixed(2)}</td>
+                            <td>${data.medioPago || ''}</td>
+                            <td><span class="${badgeClass}">${data.estado || ''}</span></td>
+                            <td>
+                                <button type="button" class="table-btn btn-edit-row" onclick="prepararEdicion('${doc.id}', '${escapeHtml(data.paciente)}', ${data.monto}, '${data.medioPago}', '${data.fecha}', '${data.concepto}', '${data.estado}')">Editar</button>
+                                <button type="button" class="table-btn btn-delete-row" onclick="eliminarRegistro('${doc.id}')">Eliminar</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+
+                    // Actualizar barra de estadística superior
+                    statAbonado.textContent = `$${totalAbonado.toFixed(2)}`;
+                    statPendiente.textContent = `$${totalPendiente.toFixed(2)}`;
+
+                } catch (error) {
+                    console.error("Error al leer contabilidad:", error);
+                    tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#ff8080;">Error al cargar datos.</td></tr>`;
+                }
+            }
+
+            window.prepararEdicion = function(id, paciente, monto, medioPago, fecha, concepto, estado) {
+                registroIdInput.value = id;
+                selectPaciente.value = paciente;
+                document.getElementById('monto').value = monto;
+                document.getElementById('medio-pago').value = medioPago;
+                document.getElementById('fecha').value = fecha;
+                document.getElementById('concepto').value = concepto;
+                document.getElementById('estado').value = estado;
+
+                formTitle.innerText = "Modificar Movimiento Contable";
+                btnAccion.innerText = "Guardar Cambios";
+                btnAccion.style.background = "linear-gradient(135deg, #f39c12, #d68910)";
+                btnCancelar.style.display = "inline-block";
+            }
+
+            btnCancelar.addEventListener('click', () => {
+                resetForm();
+            });
+
+            function resetForm() {
+                form.reset();
+                registroIdInput.value = "";
+                document.getElementById('fecha').valueAsDate = new Date();
+                formTitle.innerText = "Registrar Movimiento Contable";
+                btnAccion.innerText = "Guardar Registro";
+                btnAccion.style.background = "linear-gradient(135deg, #9b59b6, #8e44ad)";
+                btnCancelar.style.display = "none";
+            }
+
+            window.eliminarRegistro = async function(id) {
+                if (confirm("¿Está seguro de eliminar permanentemente este registro contable?")) {
+                    try {
+                        await db.collection("contabilidad").doc(id).delete();
+                        await cargarContabilidad();
+                    } catch (error) {
+                        console.error("Error al eliminar:", error);
+                        alert(`Error al eliminar: ${error.message}`);
+                    }
+                }
+            }
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            }
+        });
+    </script>
+</body>
+</html>
