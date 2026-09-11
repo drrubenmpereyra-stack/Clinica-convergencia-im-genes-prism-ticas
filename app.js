@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nombre: "4. Rúbricas de Consultas",
             claseBtn: "btn-b4-p",
             hijos: [
-                { nombre: "4.1 Escalas de Evaluación Clínica", clase: "btn-b4-s", desc: "Instrumentos estandarizados de medición." },
+                { nombre: "4.1 Escalas de Evaluación Clínica", link: "rubrica.html",  clase: "btn-b4-s", desc: "Instrumentos estandarizados de medición." },
                 { nombre: "4.2 Indicadores de Convergencia", clase: "btn-b4-s", desc: "Parámetros de evolución conjunta." }
             ]
         },
