@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica de la Convergencia - Visor Oficial de Documentos PDF</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --purple-glow: 0 0 12px rgba(186, 85, 211, 0.6), 0 0 24px rgba(160, 32, 240, 0.4);
+            --purple-border: #ba55d3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: rgba(18, 16, 28, 0.92);
+            color: #f1f1f1;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .container { 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+        
+        .card { 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            background: rgba(18, 16, 28, 0.88);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+            box-sizing: border-box;
+        }
+
+        h2 { 
+            color: #e2b7ff; 
+            font-size: 1.2rem; 
+            margin-top: 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            border-bottom: 1px solid rgba(186, 85, 211, 0.3); 
+            padding-bottom: 8px; 
+        }
+
+        .form-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 5px; 
+            text-align: left; 
+        }
+
+        label { 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            color: #d8b4fe; 
+        }
+        
+        select { 
+            padding: 10px 12px; 
+            background: rgba(28, 25, 42, 0.8); 
+            border: 1px solid rgba(186, 85, 211, 0.3); 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            color: #fff; 
+            outline: none; 
+            transition: all 0.3s ease; 
+        }
+        
+        select:focus { 
+            border-color: var(--purple-border); 
+            box-shadow: var(--purple-glow); 
+        }
+
+        select option { 
+            background: #1c192a; 
+            color: #fff; 
+        }
+
+        #pdf-display-container {
+            background: rgba(28, 25, 42, 0.7);
+            border: 1px solid rgba(186, 85, 211, 0.25);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            min-height: 650px;
+            box-sizing: border-box;
+        }
+
+        .placeholder-text {
+            color: #b19cd9;
+            text-align: center;
+            font-style: italic;
+            padding: 150px 20px;
+        }
+
+        /* Estilo estricto para incrustar el PDF original sin modificaciones de diseño */
+        .pdf-frame {
+            width: 100%;
+            height: 700px;
+            border: none;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        @media print {
+            body {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <main class="container">
+        <!-- Contenedor Superior con el Documento PDF Original -->
+        <div class="card">
+            <h2><i class="fa-solid fa-file-pdf"></i> Visor de Documentos PDF Originales</h2>
+            <div id="pdf-display-container">
+                <div class="placeholder-text">Seleccione un documento en el selector inferior para visualizar el archivo PDF original integrado.</div>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Selección -->
+        <div class="card">
+            <h2><i class="fa-solid fa-list-check"></i> Selector de Instrumentos</h2>
+            <div class="form-group">
+                <label for="pdf-select">Seleccione el Archivo PDF a Cargar</label>
+                <select id="pdf-select" onchange="mostrarPdfOriginal()">
+                    <option value="">-- Seleccione un documento PDF --</option>
+                    <option value="Rubrica-3-Indice-de-Viabilidad-Pragmatica-y-Red-de-Sosten.pdf">Rúbrica 3: Índice de Viabilidad Pragmática y Red de Sostén</option>
+                    <option value="Rubrica-Mapa-de-Autenticidad-y-Tendencia-Actualizante.pdf">Rúbrica 1: Mapa de Autenticidad y Tendencia Actualizante</option>
+                    <option value="Rubrica-Matriz-de-Tension-entre-Urgencia-Sintomatica-y-Demanda-de-Sentido.pdf">Rúbrica: Matriz de Tensión entre Urgencia Sintomática y Demanda de Sentido</option>
+                    <option value="Rubrica-Validacion-Empatica-como-Freno-de-Emergencia.pdf">Rúbrica: Validación Empática como Freno de Emergencia</option>
+                </select>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Bloqueo de seguridad institucional contra descargas o copias directas
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && (e.key === 'p' || e.key === 'P' || e.key === 's' || e.key === 'S' || e.key === 'c' || e.key === 'C')) {
+                e.preventDefault();
+                alert("Acción no permitida: Los documentos PDF se encuentran protegidos bajo normativa institucional.");
+            }
+            if (e.key === 'PrintScreen') {
+                navigator.clipboard.writeText('');
+                alert("Captura de pantalla restringida por directiva de seguridad.");
+            }
+        });
+
+        function mostrarPdfOriginal() {
+            const select = document.getElementById('pdf-select');
+            const container = document.getElementById('pdf-display-container');
+            const fileName = select.value;
+
+            if (fileName) {
+                // Incrusta el archivo PDF original de manera literal usando la ruta local compartida
+                container.innerHTML = `<embed src="${fileName}" type="application/pdf" class="pdf-frame">`;
+            } else {
+                container.innerHTML = '<div class="placeholder-text">Seleccione un documento en el selector inferior para visualizar el archivo PDF original integrado.</div>';
+            }
+        }
+    </script>
+</body>
+</html>
