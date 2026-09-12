@@ -12,7 +12,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #fce7f3; /* Fondo rosa pastel pálido y suave */
+            background: #fce7f3;
             color: #2e2a36;
             margin: 0;
             padding: 20px;
@@ -207,7 +207,13 @@
 
     <script>
         (function() {
-            const db = firebase.firestore();
+            let db;
+            try {
+                db = firebase.firestore();
+            } catch (e) {
+                console.warn("Firestore no inicializado globalmente aún.");
+            }
+
             const dbStatusEl = document.getElementById('db-status');
             if(dbStatusEl) dbStatusEl.innerText = "Módulo de Pacientes cargado correctamente en el Frame.";
 
@@ -218,7 +224,9 @@
             const btnCancelar = document.getElementById('btn-cancelar');
             const patientIdInput = document.getElementById('patient-id');
 
-            cargarPacientesFirestore();
+            if (db) {
+                cargarPacientesFirestore();
+            }
 
             patientForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -229,7 +237,10 @@
                 const profesion = document.getElementById('profesion').value.trim();
                 const docId = patientIdInput.value;
 
-                if(dbStatusEl) dbStatusEl.innerText = "Procesando en Firestore...";
+                if (!db) {
+                    alert("Error: Base de datos no disponible.");
+                    return;
+                }
 
                 try {
                     if (docId) {
@@ -237,23 +248,17 @@
                             nombre, dni, telefono, profesion,
                             actualizado: new Date().toISOString()
                         }, { merge: true });
-                        if(dbStatusEl) dbStatusEl.innerText = `Paciente ${nombre} actualizado correctamente.`;
                     } else {
                         await db.collection("pacientes").add({
                             nombre, dni, telefono, profesion,
                             creado: new Date().toISOString()
                         });
-                        if(dbStatusEl) dbStatusEl.innerText = `Paciente ${nombre} registrado exitosamente.`;
                     }
                     
                     resetForm();
                     await cargarPacientesFirestore();
                 } catch (error) {
                     console.error("Error en Firestore:", error);
-                    if(dbStatusEl) {
-                        dbStatusEl.style.color = "#ff8080";
-                        dbStatusEl.innerText = `Error: ${error.message}`;
-                    }
                     alert(`Error al guardar en base de datos: ${error.message}`);
                 }
             });
@@ -286,10 +291,7 @@
                     });
                 } catch (error) {
                     console.error("Error al leer Firestore:", error);
-                    if(dbStatusEl) {
-                        dbStatusEl.style.color = "#ff8080";
-                        dbStatusEl.innerText = `Error de lectura: ${error.message}`;
-                    }
+                    patientTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#e74c3c;">Error al cargar registros.</td></tr>`;
                 }
             }
 
@@ -323,14 +325,10 @@
                 if (confirm(`¿Estás seguro de eliminar permanentemente a ${nombre}?`)) {
                     try {
                         await db.collection("pacientes").doc(id).delete();
-                        if(dbStatusEl) dbStatusEl.innerText = `Paciente ${nombre} eliminado.`;
                         await cargarPacientesFirestore();
                     } catch (error) {
                         console.error("Error al eliminar:", error);
-                        if(dbStatusEl) {
-                            dbStatusEl.style.color = "#ff8080";
-                            dbStatusEl.innerText = `Error al eliminar: ${error.message}`;
-                        }
+                        alert(`Error al eliminar: ${error.message}`);
                     }
                 }
             }
