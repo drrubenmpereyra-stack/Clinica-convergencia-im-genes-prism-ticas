@@ -151,6 +151,10 @@
         .btn-edit-row { background-color: #f39c12; color: #fff; }
         .btn-delete-row { background-color: #e74c3c; color: #fff; }
     </style>
+
+    <!-- SDKs de Firebase Compat obligatorios -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -206,16 +210,26 @@
     </div>
 
     <script>
-        (function() {
-            let db;
-            try {
-                db = firebase.firestore();
-            } catch (e) {
-                console.warn("Firestore no inicializado globalmente aún.");
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof firebase === 'undefined') {
+                alert("Error crítico: Firebase no está disponible.");
+                return;
             }
 
-            const dbStatusEl = document.getElementById('db-status');
-            if(dbStatusEl) dbStatusEl.innerText = "Módulo de Pacientes cargado correctamente en el Frame.";
+            const firebaseConfig = {
+                apiKey: "AIzaSyAd5dyriu-Z2Gms1Tq9u8A75LrQKHd0GC8",
+                authDomain: "aplicacion1-c794d.firebaseapp.com",
+                projectId: "aplicacion1-c794d",
+                storageBucket: "aplicacion1-c794d.firebasestorage.app",
+                messagingSenderId: "310699962592",
+                appId: "1:310699962592:web:71794de4268e47b35da085",
+                measurementId: "G-R3QHSGSNQB"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const db = firebase.firestore();
 
             const patientForm = document.getElementById('patient-form');
             const patientTableBody = document.getElementById('patient-table-body');
@@ -224,9 +238,7 @@
             const btnCancelar = document.getElementById('btn-cancelar');
             const patientIdInput = document.getElementById('patient-id');
 
-            if (db) {
-                cargarPacientesFirestore();
-            }
+            cargarPacientesFirestore();
 
             patientForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -236,11 +248,6 @@
                 const telefono = document.getElementById('telefono').value.trim();
                 const profesion = document.getElementById('profesion').value.trim();
                 const docId = patientIdInput.value;
-
-                if (!db) {
-                    alert("Error: Base de datos no disponible.");
-                    return;
-                }
 
                 try {
                     if (docId) {
@@ -337,7 +344,7 @@
                 if (!str) return '';
                 return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
             }
-        })();
+        });
     </script>
 </body>
 </html>
