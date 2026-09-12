@@ -13,8 +13,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: rgba(18, 16, 28, 0.92);
-            color: #f1f1f1;
+            background: #d1fae5;
+            color: #064e3b;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
@@ -37,23 +37,23 @@
             flex-direction: column;
             gap: 15px;
             width: 100%;
-            background: rgba(18, 16, 28, 0.88);
+            background: #d1fae5;
             backdrop-filter: blur(12px);
             padding: 25px;
             border-radius: 14px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(186, 85, 211, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.3);
             box-sizing: border-box;
         }
 
         h2 { 
-            color: #e2b7ff; 
+            color: #065f46; 
             font-size: 1.2rem; 
             margin-top: 0; 
             display: flex; 
             align-items: center; 
             gap: 8px; 
-            border-bottom: 1px solid rgba(186, 85, 211, 0.3); 
+            border-bottom: 1px solid rgba(16, 185, 129, 0.3); 
             padding-bottom: 8px; 
         }
 
@@ -67,33 +67,33 @@
         label { 
             font-size: 0.85rem; 
             font-weight: 600; 
-            color: #d8b4fe; 
+            color: #047857; 
         }
         
         select { 
             padding: 10px 12px; 
-            background: rgba(28, 25, 42, 0.8); 
-            border: 1px solid rgba(186, 85, 211, 0.3); 
+            background: #ffffff; 
+            border: 1px solid rgba(16, 185, 129, 0.4); 
             border-radius: 8px; 
             font-size: 0.95rem; 
-            color: #fff; 
+            color: #064e3b; 
             outline: none; 
             transition: all 0.3s ease; 
         }
         
         select:focus { 
-            border-color: var(--purple-border); 
-            box-shadow: var(--purple-glow); 
+            border-color: #059669; 
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.4); 
         }
 
         select option { 
-            background: #1c192a; 
-            color: #fff; 
+            background: #ffffff; 
+            color: #064e3b; 
         }
 
         #pdf-display-container {
-            background: rgba(28, 25, 42, 0.7);
-            border: 1px solid rgba(186, 85, 211, 0.25);
+            background: #ffffff;
+            border: 1px solid rgba(16, 185, 129, 0.3);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
@@ -102,13 +102,12 @@
         }
 
         .placeholder-text {
-            color: #b19cd9;
+            color: #047857;
             text-align: center;
             font-style: italic;
             padding: 150px 20px;
         }
 
-        /* Estilo estricto para incrustar el PDF original sin modificaciones de diseño */
         .pdf-frame {
             width: 100%;
             height: 700px;
@@ -142,6 +141,7 @@
                 <label for="pdf-select">Seleccione el Archivo PDF a Cargar</label>
                 <select id="pdf-select" onchange="mostrarPdfOriginal()">
                     <option value="">-- Seleccione un documento PDF --</option>
+                    <option value="Rubrica-de-Evaluacion-de-Convergencia-Integral-y-Proyectiva.pdf">Rúbrica de Evaluación de Convergencia Integral y Proyectiva</option>
                     <option value="Rubrica-3-Indice-de-Viabilidad-Pragmatica-y-Red-de-Sosten.pdf">Rúbrica 3: Índice de Viabilidad Pragmática y Red de Sostén</option>
                     <option value="Rubrica-Mapa-de-Autenticidad-y-Tendencia-Actualizante.pdf">Rúbrica 1: Mapa de Autenticidad y Tendencia Actualizante</option>
                     <option value="Rubrica-Matriz-de-Tension-entre-Urgencia-Sintomatica-y-Demanda-de-Sentido.pdf">Rúbrica: Matriz de Tensión entre Urgencia Sintomática y Demanda de Sentido</option>
@@ -152,7 +152,6 @@
     </main>
 
     <script>
-        // Bloqueo de seguridad institucional contra descargas o copias directas
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && (e.key === 'p' || e.key === 'P' || e.key === 's' || e.key === 'S' || e.key === 'c' || e.key === 'C')) {
                 e.preventDefault();
@@ -170,7 +169,6 @@
             const fileName = select.value;
 
             if (fileName) {
-                // Incrusta el archivo PDF original de manera literal usando la ruta local compartida
                 container.innerHTML = `<embed src="${fileName}" type="application/pdf" class="pdf-frame">`;
             } else {
                 container.innerHTML = '<div class="placeholder-text">Seleccione un documento en el selector inferior para visualizar el archivo PDF original integrado.</div>';
